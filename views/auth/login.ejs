@@ -52,6 +52,9 @@
                 if(data.status) {
                     localStorage.setItem('user', JSON.stringify(data.user));
                     localStorage.setItem('token', JSON.stringify(data.token));
+                    setTimeout(() => {
+                        window.location.href = "/";
+                    }, 500);
                 }
                 else {
                     alert(data.message);
