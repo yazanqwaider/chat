@@ -34,6 +34,7 @@ app.post('/login', async (req, res) => {
 
     req.session.regenerate(function(){
         req.session.token = result.token;
+        req.session.user = result.user;
         res.json(result);
     });
 })
@@ -48,6 +49,7 @@ app.post('/signup', async (req, res, next) => {
     const result = await auth.signup(userData);
     req.session.regenerate(function(){
         req.session.token = result.token;
+        req.session.user = result.user;
         res.json(result);
     });
 })
@@ -56,6 +58,12 @@ app.get('/chats', checkAuthentication, (req, res) => {
     res.render('chats');
 });
 
+
+app.get('/people', checkAuthentication, async (req, res) => {
+    const people = require('./src/people');
+    let unfriendPeople = await people.getUnfriendPeople(req.session.user);
+    res.render('people', {unfriendPeople: unfriendPeople});
+});
 
 /** Middlewares */
 function checkAuthentication(req, res, next) {
