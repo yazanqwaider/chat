@@ -65,6 +65,39 @@ app.get('/people', checkAuthentication, async (req, res) => {
     res.render('people', {unfriendPeople: unfriendPeople});
 });
 
+app.get('/api/people', checkApiAuthentication, async (req, res) => {
+    const people = require('./src/people');
+    let list = [];
+    if(req.query.type == 'explore') {
+        list = await people.getUnfriendPeople(req.session.user);
+    }
+    else if(req.query.type == 'friends') {
+        list = await people.getFriendPeople(req.session.user);
+    }
+    res.json({list: list});
+});
+
+
+app.get('/api/people/:required_action/:id', async (req, res) => {
+    const people = require('./src/people');
+    let response = null;
+
+    if(req.params.required_action == 'add') {
+        response = await people.addFriend(req.session.user, req.params.id);
+    }
+    else if(req.params.required_action == 'remove'){
+        response = await people.removeFriend(req.session.user, req.params.id);
+    }
+    
+    let user = req.session.user;
+    user.friends = response;
+    req.session.save(function(){
+        req.session.user = user;
+        res.json(response);
+    });
+});
+
+
 /** Middlewares */
 function checkAuthentication(req, res, next) {
     let token = req.session.token;
@@ -77,7 +110,7 @@ function checkAuthentication(req, res, next) {
 }
 
 function checkApiAuthentication(req, res, next) {
-    let token = req.headers['Authorization'];
+    let token = req.headers['authorization'];
     if(token && token.split(' ')[1]) {
         if(jwt.verify(token.split(' ')[1], process.env.ACCESS_TOKEN_SECRET)) {
             next();

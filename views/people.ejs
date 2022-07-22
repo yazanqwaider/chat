@@ -9,11 +9,109 @@
 
 <body>
     <div>
-        <% for(let i = 0; i < unfriendPeople.length; i++) { %>
-            <div>
-                <%= unfriendPeople[i].username %>
-            </div>
-        <% } %>
+        <div>
+            <button id="explore_btn">Explore</button>
+            <button id="friends_btn">Friends</button>
+        </div>
+
+        <div class="people-layout">
+            <% for(let i = 0; i < unfriendPeople.length; i++) { %>
+                <div>
+                    <%= unfriendPeople[i].username %>
+                    <button class="add-friend-btn" data-userId="<%= unfriendPeople[i]._id %>">add</button>
+                </div>
+            <% } %>
+        </div>
     </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+
+        const explore_btn = document.getElementById('explore_btn');
+        explore_btn.addEventListener('click', function() {
+            getPeople('explore');
+        });
+
+        const friends_btn = document.getElementById('friends_btn');
+        friends_btn.addEventListener('click', function() {
+            getPeople('friends');
+        });
+
+       
+        handleFriendOperations();
+
+        function handleFriendOperations() {
+            const addFriendBtns = document.querySelectorAll('.add-friend-btn');
+            addFriendBtns.forEach(addFriendBtn => {
+                addFriendBtn.addEventListener('click', async function() {
+                    let answer = confirm('Are you sure to add friend ?');
+                    if(answer) {
+                        const user_id = this.getAttribute('data-userId');
+                        let response = await toggleFriendConnection("add", user_id);
+                        console.log(response);
+                        let user = JSON.parse(localStorage.getItem('user'));
+                        user.friends = response;
+                        localStorage.setItem('user', JSON.stringify(user));
+                    }
+                });
+            });
+
+            const removeFriendBtns = document.querySelectorAll('.remove-friend-btn');
+            removeFriendBtns.forEach(removeFriendBtn => {
+                removeFriendBtn.addEventListener('click', async function() {
+                    let answer = confirm('Are you sure to remove friend ?');
+                    if(answer) {
+                        const user_id = this.getAttribute('data-userId');
+                        let response = await toggleFriendConnection("remove", user_id);
+                        console.log(response);
+                        let user = JSON.parse(localStorage.getItem('user'));
+                        user.friends = response;
+                        localStorage.setItem('user', JSON.stringify(user));
+                    }
+                });
+            });
+        }
+
+
+        function getPeople(type) {
+            fetch(`/api/people?type=${type}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then((res) => res.json())
+            .then((response) => {
+                const list = response.list;
+                let htmlItems = "";
+                list.forEach((person) => {
+                    htmlItems+= `
+                        <div>
+                            ${person.username}
+                            ${
+                                (type == 'friends')?
+                                `<button class="remove-friend-btn" data-userId="${person._id}">remove</button>`
+                                :
+                                `<button class="add-friend-btn" data-userId="${person._id}">add</button>`
+                            }
+                        </div>
+                    `;
+                });
+                document.querySelector('.people-layout').innerHTML = htmlItems;
+                handleFriendOperations();
+            });
+        }
+
+        async function toggleFriendConnection(required_action, user_id) {
+            return await fetch(`/api/people/${required_action}/${user_id}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then((res) => res.json())
+            .then((response) => response);
+        }
+    </script>
 </body>
 </html>
