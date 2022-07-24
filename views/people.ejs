@@ -107,7 +107,8 @@
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
-                }
+                },
+                method: 'POST'
             })
             .then((res) => res.json())
             .then((response) => response);
