@@ -1,1 +1,49 @@
-chats
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>People</title>
+</head>
+
+<body>
+    <div>
+        <div class="people-layout">
+            <% for(let i = 0; i < friends.length; i++) { %>
+                <div>
+                    <button class="chat-item" data-userId="<%= friends[i]._id %>">
+                        <%= friends[i].username %>
+                    </button>
+                </div>
+            <% } %>
+        </div>
+
+        <div>
+            <%- include('./messages.ejs') %>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+
+        const chatItems = document.querySelectorAll('.chat-item');
+        chatItems.forEach(chatItem => {
+            chatItem.addEventListener('click', function() {
+                let userId = this.getAttribute('data-userId');
+                getMessages(userId);
+            });
+        });
+
+        async function getMessages(userId) {
+            fetch(`/api/chats/${userId}`, {headers: {"Authorization": `Bearer ${token}`, "Content-Type": "application/json"}})
+                .then((response) => response.json()).then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    </script>
+</body>
+</html>
