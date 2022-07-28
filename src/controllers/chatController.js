@@ -40,7 +40,7 @@ module.exports.api_get_messages = async function(req, res) {
             user_2: new ObjectId(friendUserId), 
             last_message: null,
         });
-
+        
         let userChat = {_id: new ObjectId(friendUserId), chatId: createdChat.insertedId};
         users.updateOne(
             {_id: new ObjectId(authUser._id)}, 
@@ -54,4 +54,21 @@ module.exports.api_get_messages = async function(req, res) {
     }
 
     res.json({chat: chat});
+}
+
+
+module.exports.api_post_messages = async function(req, res) {
+    const mongodb = require('../connectDB');
+    let database = mongodb().db('chat_db');
+    let chats = database.collection('chats');
+    let ObjectId = require('mongodb').ObjectId;
+
+    let newMessage = {
+        user_sender: new ObjectId(req.body.user_sender),
+        text: req.body.content_text,
+        created_at: new Date()
+    };
+
+    await chats.updateOne({_id: new ObjectId(req.params.chat_id)}, { $push: {messages: newMessage}});
+    res.json({status: true, message: newMessage});
 }

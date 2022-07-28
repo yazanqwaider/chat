@@ -26,6 +26,7 @@
 
     <script>
         const token = localStorage.getItem('token');
+        let active_chat_friend = null;
 
         const chatItems = document.querySelectorAll('.chat-item');
         chatItems.forEach(chatItem => {
@@ -38,11 +39,68 @@
         async function getMessages(userId) {
             fetch(`/api/chats/${userId}`, {headers: {"Authorization": `Bearer ${token}`, "Content-Type": "application/json"}})
                 .then((response) => response.json()).then((res) => {
-                    console.log(res);
+                    // console.log(res);
+                    const chat = res.chat;
+                    active_chat_friend = {
+                        chat_id: chat._id,
+                        user_id: userId
+                    };
+
+                    let messagesElm = "";
+                    if(chat.hasOwnProperty('messages')) {
+                        const messages = chat.messages;
+                        messages.forEach((message) => {
+                            messagesElm+= createMessageItem(message);
+                        });
+                    }
+                    else {
+                        messagesElm = "No Messages Yet !";
+                    }
+
+                    document.querySelector('.messages-layout').innerHTML = messagesElm;
                 })
                 .catch((err) => {
                     console.log(err);
                 });
+        }
+    
+        
+        document.getElementById('send-message-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            let form = document.getElementById('message-form');
+            let messageText = document.querySelector('#message-form #message');
+
+            if(messageText && active_chat_friend) {
+                fetch(`/api/chats/${active_chat_friend.chat_id}/messages`, 
+                    {
+                        method: 'POST',
+                        headers: {"Authorization": `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            user_sender: active_chat_friend.user_id,
+                            content_text: messageText.value
+                        })
+                    }
+                )
+                .then((res) => res.json())
+                .then((response) => {
+                    console.log(response);
+                    if(response.status) {
+                        let message = createMessageItem(response.message);
+                        document.querySelector('.messages-layout').innerHTML+= message;
+                        document.querySelector('#message-form #message').value = "";
+                    }
+                });
+            }
+        });
+
+
+        function createMessageItem(message) {
+            return `
+                <div class="message-item">
+                    ${message.text}
+                </div>
+            `;
         }
     </script>
 </body>
