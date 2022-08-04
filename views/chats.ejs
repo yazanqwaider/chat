@@ -24,9 +24,22 @@
         </div>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script>
         const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+
         let active_chat_friend = null;
+
+        var socket = io();
+        
+        socket.emit('connected', user._id);
+
+        socket.on('messageReceived', function(messageObject) {
+            messageObject = JSON.parse(messageObject);
+            let message = createMessageItem({text: messageObject.messageText});
+            document.querySelector('.messages-layout').innerHTML+= message;
+        });
 
         const chatItems = document.querySelectorAll('.chat-item');
         chatItems.forEach(chatItem => {
@@ -84,11 +97,20 @@
                 )
                 .then((res) => res.json())
                 .then((response) => {
-                    console.log(response);
+                    // console.log(response);
                     if(response.status) {
                         let message = createMessageItem(response.message);
                         document.querySelector('.messages-layout').innerHTML+= message;
                         document.querySelector('#message-form #message').value = "";
+
+                        const sender_id = JSON.parse(localStorage.getItem('user'))._id;
+                        let msgObject = {
+                            sender_id: sender_id,
+                            receiver_id: active_chat_friend.user_id,
+                            messageText: response.message.text
+                        };
+
+                        socket.emit("messageSended", msgObject);
                     }
                 });
             }

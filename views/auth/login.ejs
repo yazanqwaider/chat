@@ -28,7 +28,10 @@
         </form>
     </div>
     
+    <script src="socket.io/socket.io.js"></script>
     <script>
+        const socket = io();
+
         let form = document.getElementById('loginForm');
         form.onsubmit = function(e) {
             e.preventDefault();
@@ -52,6 +55,9 @@
                 if(data.status) {
                     localStorage.setItem('user', JSON.stringify(data.user));
                     localStorage.setItem('token', data.token);
+
+                    socket.emit('connected', data.user._id);
+
                     setTimeout(() => {
                         window.location.href = "/";
                     }, 500);
