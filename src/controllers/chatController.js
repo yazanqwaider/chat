@@ -41,10 +41,16 @@ module.exports.api_get_messages = async function(req, res) {
             last_message: null,
         });
         
-        let userChat = {_id: new ObjectId(friendUserId), chatId: createdChat.insertedId};
+        let senderUserChat = {_id: new ObjectId(friendUserId), chatId: createdChat.insertedId};
+        let receiverUserChat = {_id: new ObjectId(authUser._id), chatId: createdChat.insertedId};
         users.updateOne(
             {_id: new ObjectId(authUser._id)}, 
-            {$push: {chats: userChat}}
+            {$push: {chats: senderUserChat}}
+        );
+
+        users.updateOne(
+            {_id: new ObjectId(friendUserId)}, 
+            {$push: {chats: receiverUserChat}}
         );
 
         chat = await chats.findOne({_id: createdChat.insertedId});
