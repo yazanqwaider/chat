@@ -22,7 +22,8 @@ module.exports = {
     async login(username, password) {
         const user = await this.checkUserExist(username);
         if(user) {
-            if(user.password == password) {
+            const enteredPassword = require('crypto').createHash('sha256').update(password).digest('base64');
+            if(user.password == enteredPassword) {
                 return {status: true, user: user, token: this.generateAccessToken(user)};
             }
         }
@@ -45,6 +46,9 @@ module.exports = {
             try {
                 const database = client.db('chat_db');
                 const users = database.collection('users');
+
+                const hashedPassword = require('crypto').createHash('sha256').update(userData.password).digest('base64');
+                userData.password = hashedPassword;
                 const insertedUser = await users.insertOne(userData);
                 user = {
                     _id: insertedUser.insertedId, 

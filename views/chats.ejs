@@ -38,6 +38,10 @@
         socket.on('messageReceived', function(messageObject) {
             messageObject = JSON.parse(messageObject);
             let message = createMessageItem({text: messageObject.messageText});
+            
+            if(document.querySelector('.no-messages-yet')) {
+                document.querySelector('.no-messages-yet').remove();
+            }
             document.querySelector('.messages-layout').innerHTML+= message;
         });
 
@@ -67,7 +71,7 @@
                         });
                     }
                     else {
-                        messagesElm = "No Messages Yet !";
+                        messagesElm = "<span class='no-messages-yet'>No Messages Yet !</span>";
                     }
 
                     document.querySelector('.messages-layout').innerHTML = messagesElm;
@@ -100,6 +104,10 @@
                     // console.log(response);
                     if(response.status) {
                         let message = createMessageItem(response.message);
+                        if(document.querySelector('.no-messages-yet')) {
+                            document.querySelector('.no-messages-yet').remove();
+                        }
+
                         document.querySelector('.messages-layout').innerHTML+= message;
                         document.querySelector('#message-form #message').value = "";
 

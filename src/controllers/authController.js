@@ -21,6 +21,7 @@ module.exports.signup_get = function(req, res) {
 module.exports.signup_post = async function(req, res) {
     const auth = require('../auth');
     const userData = {username: req.body.username, password: req.body.password};
+
     const result = await auth.signup(userData);
     req.session.regenerate(function(){
         req.session.token = result.token;
