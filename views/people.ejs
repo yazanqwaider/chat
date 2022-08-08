@@ -12,13 +12,14 @@
         <div>
             <button id="explore_btn">Explore</button>
             <button id="friends_btn">Friends</button>
+            <button id="requests_btn">Requests</button>
         </div>
 
         <div class="people-layout">
             <% for(let i = 0; i < unfriendPeople.length; i++) { %>
                 <div>
                     <%= unfriendPeople[i].username %>
-                    <button class="add-friend-btn" data-userId="<%= unfriendPeople[i]._id %>">add</button>
+                    <button class="request-friend-btn" data-userId="<%= unfriendPeople[i]._id %>">add</button>
                 </div>
             <% } %>
         </div>
@@ -37,17 +38,21 @@
             getPeople('friends');
         });
 
-       
+        const requests_btn = document.getElementById('requests_btn');
+        requests_btn.addEventListener('click', function() {
+            getPeople('requested');
+        });
+
         handleFriendOperations();
 
         function handleFriendOperations() {
-            const addFriendBtns = document.querySelectorAll('.add-friend-btn');
+            const addFriendBtns = document.querySelectorAll('.request-friend-btn');
             addFriendBtns.forEach(addFriendBtn => {
                 addFriendBtn.addEventListener('click', async function() {
                     let answer = confirm('Are you sure to add friend ?');
                     if(answer) {
                         const user_id = this.getAttribute('data-userId');
-                        let response = await toggleFriendConnection("add", user_id);
+                        let response = await toggleFriendConnection("request", user_id);
                         console.log(response);
                         let user = JSON.parse(localStorage.getItem('user'));
                         user.friends = response;
@@ -70,6 +75,34 @@
                     }
                 });
             });
+
+            const accpetFriendBtns = document.querySelectorAll('.accept-friend-btn');
+            accpetFriendBtns.forEach(accpetFriendBtn => {
+                accpetFriendBtn.addEventListener('click', async function() {
+                    const user_id = this.getAttribute('data-userId');
+                    let response = await responseFriendRequest("accept", user_id);
+                    console.log('test')
+                    console.log(response);
+                    let user = JSON.parse(localStorage.getItem('user'));
+                    user.friends = response;
+                    localStorage.setItem('user', JSON.stringify(user));
+                });
+            });
+
+            const declineFriendBtns = document.querySelectorAll('.decline-friend-btn');
+            declineFriendBtns.forEach(declineFriendBtn => {
+                declineFriendBtn.addEventListener('click', async function() {
+                    let answer = confirm('Are you sure to decline friend ?');
+                    if(answer) {
+                        const user_id = this.getAttribute('data-userId');
+                        let response = await responseFriendRequest("decline", user_id);
+                        console.log(response);
+                        let user = JSON.parse(localStorage.getItem('user'));
+                        user.friends = response;
+                        localStorage.setItem('user', JSON.stringify(user));
+                    }
+                });
+            });
         }
 
 
@@ -85,17 +118,31 @@
                 const list = response.list;
                 let htmlItems = "";
                 list.forEach((person) => {
-                    htmlItems+= `
-                        <div>
-                            ${person.username}
-                            ${
-                                (type == 'friends')?
-                                `<button class="remove-friend-btn" data-userId="${person._id}">remove</button>`
-                                :
-                                `<button class="add-friend-btn" data-userId="${person._id}">add</button>`
-                            }
-                        </div>
-                    `;
+                    if(type == 'friends') {
+                        htmlItems+= `
+                            <div>
+                                ${person.username}
+                                <button class="remove-friend-btn" data-userId="${person._id}">remove</button>
+                            </div>
+                        `;
+                    }
+                    else if(type == 'explore') {
+                        htmlItems+= `
+                            <div>
+                                ${person.username}
+                                <button class="request-friend-btn" data-userId="${person._id}">request</button>
+                            </div>
+                        `;
+                    }
+                    else if(type == 'requested') {
+                        htmlItems+= `
+                            <div>
+                                ${person.username}
+                                <button class="accept-friend-btn" data-userId="${person._id}">accept</button>
+                                <button class="decline-friend-btn" data-userId="${person._id}">decline</button>
+                            </div>
+                        `;
+                    }
                 });
                 document.querySelector('.people-layout').innerHTML = htmlItems;
                 handleFriendOperations();
@@ -104,6 +151,18 @@
 
         async function toggleFriendConnection(required_action, user_id) {
             return await fetch(`/api/people/${required_action}/${user_id}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                method: 'POST'
+            })
+            .then((res) => res.json())
+            .then((response) => response);
+        }
+
+        async function responseFriendRequest(required_action, user_id) {
+            return await fetch(`/api/response-friend-request/${required_action}/${user_id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`

@@ -49,11 +49,15 @@ module.exports = {
 
                 const hashedPassword = require('crypto').createHash('sha256').update(userData.password).digest('base64');
                 userData.password = hashedPassword;
+                userData.friends = [];
+                userData.friendship_requests = [];
                 const insertedUser = await users.insertOne(userData);
                 user = {
                     _id: insertedUser.insertedId, 
                     username: userData.username, 
-                    password: userData.password
+                    password: userData.password,
+                    friends: userData.friends,
+                    friendship_requests: userData.friendship_requests
                 }
             } catch (error) {
                 console.log(error);
