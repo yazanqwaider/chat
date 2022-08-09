@@ -43,16 +43,15 @@ module.exports.api_people_post = async function(req, res) {
 module.exports.api_response_friendship_post = async function(req, res) {
     const people = require('../people');
     let response = null;
+    let user = req.session.user;
 
     if(req.params.required_action == 'accept') {
-        response = await people.acceptFriendship(req.session.user, req.params.id);
+        user.friends = await people.acceptFriendship(req.session.user, req.params.id);
     }
     else if(req.params.required_action == 'decline'){
-        response = await people.declineFriendship(req.session.user, req.params.id);
+        user.friendship_requests = await people.declineFriendship(req.session.user, req.params.id);
     }
     
-    let user = req.session.user;
-    user.friends = response;
     req.session.save(function(){
         req.session.user = user;
         res.json(response);

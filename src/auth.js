@@ -1,18 +1,12 @@
-const mongodb = require('./connectDB');
+const mongodb = require('./connectDB')();
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 module.exports = {
     async checkUserExist(username) {
-        const client = mongodb();
-        try {
-            const database = client.db('chat_db');
-            const users = database.collection('users');
-            const user = await users.findOne({username: username+""});
-            return user;
-        } finally {
-            await client.close();
-        }
+        const users = mongodb.collection('users');
+        const user = await users.findOne({username: username+""});
+        return user;
     },
 
     generateAccessToken(user) {
@@ -31,9 +25,7 @@ module.exports = {
     },
 
     async loginById(id) {
-        const client = mongodb();
-        const database = client.database('chat_db');
-        const users = database.collection('users');
+        const users = mongodb.collection('users');
         const user = await users.findOne({_id: id});
         return this.generateAccessToken(user);
     },
@@ -42,10 +34,8 @@ module.exports = {
         let user = await this.checkUserExist(userData.username);
 
         if(user == null) {
-            const client = mongodb();
             try {
-                const database = client.db('chat_db');
-                const users = database.collection('users');
+                const users = mongodb.collection('users');
 
                 const hashedPassword = require('crypto').createHash('sha256').update(userData.password).digest('base64');
                 userData.password = hashedPassword;
@@ -67,7 +57,6 @@ module.exports = {
         else {
             return {status: false, message: 'This account have already exists, please try login.'};
         }
-
         return {status: true, user: user, token: this.generateAccessToken(user)};
     }
 }

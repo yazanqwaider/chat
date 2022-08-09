@@ -7,9 +7,8 @@ module.exports.chats_get = async function(req, res) {
         })
     }
 
-    const mongodb = require('../connectDB');
-    let database = mongodb().db('chat_db');
-    let users = database.collection('users');
+    const mongodb = require('../connectDB')();
+    let users = mongodb.collection('users');
     let friends = await users.find({_id: {$in: friendsIds}}).toArray();
 
     res.render('chats', {friends: friends});
@@ -20,12 +19,11 @@ module.exports.api_get_messages = async function(req, res) {
     let authUser = req.session.user;
     let friendUserId = req.params.user_id;
 
-    const mongodb = require('../connectDB');
-    let database = mongodb().db('chat_db');
-    let chats = database.collection('chats');
+    const mongodb = require('../connectDB')();
+    let chats = mongodb.collection('chats');
     let ObjectId = require('mongodb').ObjectId;
     
-    let users = database.collection('users');
+    let users = mongodb.collection('users');
     authUser = await users.findOne({_id: new ObjectId(authUser._id) });
     let authUserChats = authUser.chats;
 
@@ -64,9 +62,8 @@ module.exports.api_get_messages = async function(req, res) {
 
 
 module.exports.api_post_messages = async function(req, res) {
-    const mongodb = require('../connectDB');
-    let database = mongodb().db('chat_db');
-    let chats = database.collection('chats');
+    const mongodb = require('../connectDB')();
+    let chats = mongodb.collection('chats');
     let ObjectId = require('mongodb').ObjectId;
 
     let newMessage = {

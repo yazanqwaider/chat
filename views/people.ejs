@@ -81,8 +81,8 @@
                 accpetFriendBtn.addEventListener('click', async function() {
                     const user_id = this.getAttribute('data-userId');
                     let response = await responseFriendRequest("accept", user_id);
-                    console.log('test')
                     console.log(response);
+                    accpetFriendBtn.parentElement.remove();
                     let user = JSON.parse(localStorage.getItem('user'));
                     user.friends = response;
                     localStorage.setItem('user', JSON.stringify(user));
@@ -97,8 +97,9 @@
                         const user_id = this.getAttribute('data-userId');
                         let response = await responseFriendRequest("decline", user_id);
                         console.log(response);
+                        declineFriendBtn.parentElement.remove();
                         let user = JSON.parse(localStorage.getItem('user'));
-                        user.friends = response;
+                        user.friendship_requests = response;
                         localStorage.setItem('user', JSON.stringify(user));
                     }
                 });
