@@ -16,8 +16,11 @@ module.exports = {
     async login(username, password) {
         const user = await this.checkUserExist(username);
         if(user) {
-            const enteredPassword = require('crypto').createHash('sha256').update(password).digest('base64');
-            if(user.password == enteredPassword) {
+            const bcrypt = require('bcrypt');
+            const salt = await bcrypt.genSalt();
+            let is_valid_password = await bcrypt.compare(password, user.password);
+
+            if(is_valid_password) {
                 return {status: true, user: user, token: this.generateAccessToken(user)};
             }
         }
@@ -37,7 +40,10 @@ module.exports = {
             try {
                 const users = mongodb.collection('users');
 
-                const hashedPassword = require('crypto').createHash('sha256').update(userData.password).digest('base64');
+                const bcrypt = require('bcrypt');
+                const salt = await bcrypt.genSalt();
+                let hashedPassword = await bcrypt.hash(userData.password, salt);
+
                 userData.password = hashedPassword;
                 userData.friends = [];
                 userData.friendship_requests = [];

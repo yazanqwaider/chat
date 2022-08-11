@@ -4,22 +4,23 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/dist/main.css">
     <title>People</title>
 </head>
 
 <body>
-    <div>
-        <div>
-            <button id="explore_btn">Explore</button>
-            <button id="friends_btn">Friends</button>
-            <button id="requests_btn">Requests</button>
+    <div class="flex">
+        <div class="w-1/5 h-screen flex flex-col bg-black py-2">
+            <button id="explore_btn" class="w-11/12 p-2 bg-white bg-opacity-10 text-white rounded-full mx-auto my-1.5 transition hover:text-green-500 hover:border hover:border-green-500">Explore</button>
+            <button id="friends_btn" class="w-11/12 p-2 bg-white bg-opacity-10 text-white rounded-full mx-auto my-1.5 transition hover:text-green-500 hover:border hover:border-green-500">Friends</button>
+            <button id="requests_btn" class="w-11/12 p-2 bg-white bg-opacity-10 text-white rounded-full mx-auto my-1.5 transition hover:text-green-500 hover:border hover:border-green-500">Requests</button>
         </div>
 
-        <div class="people-layout">
+        <div class="w-4/5 p-4 people-layout bg-black bg-opacity-5">
             <% for(let i = 0; i < unfriendPeople.length; i++) { %>
-                <div>
-                    <%= unfriendPeople[i].username %>
-                    <button class="request-friend-btn" data-userId="<%= unfriendPeople[i]._id %>">add</button>
+                <div class="person-item border border-gray-50 p-3 my-2 rounded-md bg-white">
+                    <span class="person-name"><%= unfriendPeople[i].username %></span>
+                    <button class="request-friend-btn bg-green-400 py-1 px-3 rounded-md text-sm shadow" data-userId="<%= unfriendPeople[i]._id %>">request</button>
                 </div>
             <% } %>
         </div>
