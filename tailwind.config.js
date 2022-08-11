@@ -5,7 +5,11 @@ module.exports = {
     "views/**/*.ejs"
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+          "cairo": ["cairo"]
+      }
+    },
   },
   plugins: [],
 }

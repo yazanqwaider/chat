@@ -4,31 +4,36 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/dist/main.css">
     <title>Signup</title>
 </head>
 
-<body>
-    <div>
-        <h4>Signup</h4>
+<body class="bg-stone-50">
+    <div class="w-1/2 mx-auto mt-32 flex flex-col items-center bg-white bg-opacity-70 border border-stone-100 shadow-slate-100 shadow-lg rounded-xl p-6">
+        <h4 class="text-center text-2xl">Signup</h4>
     
-        <form method="post" id="signupForm">
-            <div>
+        <form method="post" id="signupForm" class="w-10/12 p-3 my-2">
+            <div class="my-3">
                 <label for="username">Username</label>
-                <input type="text" name="username" id="username" placeholder="Username" required>
+                <input type="text" name="username" id="username" placeholder="Username" class="form-input" autocomplete="off" required>
             </div>
     
-            <div>
+            <div class="my-3">
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" placeholder="Password" required>
+                <input type="password" name="password" id="password" placeholder="Password" class="form-input" required>
+            </div>
+
+            <div class="my-3">
+                <label for="confirmpassword">Confirm Password</label>
+                <input type="password" name="password" id="confirmpassword" placeholder="Confirm Password" class="form-input" required>
+            </div>
+    
+            <div class="mt-6 text-center">
+                <button class="px-6 py-1.5 rounded-md bg-green-400 transition hover:bg-green-500 shadow-sm shadow-slate-400">Signup</button>
             </div>
 
             <div>
-                <label for="confirmpassword">Confirm Password</label>
-                <input type="password" name="password" id="confirmpassword" placeholder="Confirm Password" required>
-            </div>
-    
-            <div>
-                <button>Signup</button>
+                <a href="/login" class="mx-2 text-gray-600">Login</a>
             </div>
         </form>
     </div>
@@ -47,11 +52,7 @@
                 return false;
             }
 
-            let form = {
-                username,
-                password
-            };
-    
+            let form = {username, password};
             fetch('http://localhost:8000/signup', {
                 method: 'POST', 
                 headers: {
