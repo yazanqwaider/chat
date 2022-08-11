@@ -8,23 +8,23 @@
     <title>Login</title>
 </head>
 
-<body>
-    <div>
-        <h4>Login</h4>
-    
-        <form method="post" id="loginForm">
-            <div>
+<body class="bg-stone-50">
+    <div class="w-1/2 mx-auto mt-32 flex flex-col items-center bg-white bg-opacity-70 border border-stone-100 shadow-slate-100 shadow-lg rounded-xl p-6">
+        <h4 class="text-center text-2xl">Login</h4>
+
+        <form method="post" id="loginForm" class="w-10/12 p-3 my-2">
+            <div class="my-3">
                 <label for="username">Username</label>
-                <input type="text" name="username" id="username" placeholder="Username" required>
+                <input type="text" name="username" id="username" placeholder="Username" class="form-input" autocomplete="off" required>
             </div>
     
-            <div>
+            <div class="my-3">
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" placeholder="Password" required>
+                <input type="password" name="password" id="password" placeholder="Password" class="form-input" required>
             </div>
     
-            <div>
-                <button>Login</button>
+            <div class="mt-6 text-center">
+                <button class="px-6 py-1.5 rounded-md bg-green-400 transition hover:bg-green-500 shadow-sm shadow-slate-400">Login</button>
             </div>
         </form>
     </div>
