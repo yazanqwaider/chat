@@ -4,22 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/dist/main.css">
     <title>People</title>
 </head>
 
 <body>
-    <div>
-        <div class="people-layout">
+    <div class="flex">
+        <div class="people-layout w-1/5 h-screen flex flex-col bg-black py-2">
+            <h4 class="text-white text-xl text-center my-1.5">Friends</h4>
+            <hr class="mb-3 bg-gray-600 border-0 h-0.5">
+
             <% for(let i = 0; i < friends.length; i++) { %>
-                <div>
-                    <button class="chat-item" data-userId="<%= friends[i]._id %>">
-                        <%= friends[i].username %>
-                    </button>
-                </div>
+                <button class="chat-item" data-userId="<%= friends[i]._id %>">
+                    <%= friends[i].username %>
+                </button>
             <% } %>
         </div>
-
-        <div>
+    
+        <div class="flex flex-col justify-between w-4/5">
             <%- include('./messages.ejs') %>
         </div>
     </div>
@@ -37,7 +39,7 @@
 
         socket.on('messageReceived', function(messageObject) {
             messageObject = JSON.parse(messageObject);
-            let message = createMessageItem({text: messageObject.messageText});
+            let message = createMessageItem({text: messageObject.messageText, user_sender: active_chat_friend.user_id});
             
             if(document.querySelector('.no-messages-yet')) {
                 document.querySelector('.no-messages-yet').remove();
@@ -66,12 +68,17 @@
                     let messagesElm = "";
                     if(chat.hasOwnProperty('messages')) {
                         const messages = chat.messages;
+                        console.log(messages);
                         messages.forEach((message) => {
                             messagesElm+= createMessageItem(message);
                         });
                     }
                     else {
-                        messagesElm = "<span class='no-messages-yet'>No Messages Yet !</span>";
+                        messagesElm = `
+                            <div class='no-messages-yet flex flex-col justify-center items-center h-full w-full'>
+                                <img src='/images/no-data.svg' class="w-1/5">
+                                <h5 class="my-3 text-xl">No Messages Yet ...</h5>
+                            </div>`;
                     }
 
                     document.querySelector('.messages-layout').innerHTML = messagesElm;
@@ -94,7 +101,6 @@
                         method: 'POST',
                         headers: {"Authorization": `Bearer ${token}`, 'Content-Type': 'application/json'},
                         body: JSON.stringify({
-                            user_sender: active_chat_friend.user_id,
                             content_text: messageText.value
                         })
                     }
@@ -126,8 +132,9 @@
 
 
         function createMessageItem(message) {
+            const side_class = (message.user_sender == user._id)? 'message_owner' : 'message_receiver';
             return `
-                <div class="message-item">
+                <div class="message-item ${side_class}">
                     ${message.text}
                 </div>
             `;

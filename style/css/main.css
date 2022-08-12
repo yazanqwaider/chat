@@ -19,4 +19,28 @@
     @apply py-1 px-3 rounded-md text-sm shadow;
 }
 
+.chat-item {
+    border: 1px solid #818181;
+    background: #1a1a1a;
+    box-shadow: 0px 0px 3px #444444;
+    @apply w-11/12 p-2 text-white rounded-full mx-auto my-1.5 transition hover:text-green-500 hover:border-green-500;
+}
+
+#send-message-btn {
+    background: linear-gradient(206deg, black, #625858 -6%, black);
+    box-shadow: 1px 1px 10px #cbcbcb;
+}
+
+.message-item {
+    @apply px-3 py-1.5 border border-gray-300 w-3/4 rounded-xl mx-1.5 my-2;
+}
+
+.message_owner {
+    background: #fbfbfb;
+}
+
+.message_receiver {
+    @apply self-end;
+}
+
 @tailwind utilities;

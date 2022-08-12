@@ -1,10 +1,9 @@
-<div class="messages-layout">
-    ...
-</div>
+<div class="messages-layout basis-4/5 flex flex-col items-start p-5"></div>
 
-<div class="message-form-layout">
-    <form method="post" id="message-form">
-        <input type="text" name="message" id="message" placeholder="Type message here" required>
-        <button type="button" id="send-message-btn">send</button>
+<div class="message-form-layout p-3 border-t border-t-gray-300">
+    <form method="post" id="message-form" class="flex justify-center items-center">
+        <input type="text" name="message" id="message" class="px-2 py-1.5 w-3/5 border border-gray-200 rounded-md outline-0 hover:border-gray-400 focus:border-gray-400 transition" 
+                placeholder="Type message here" autocomplete="off" required>
+        <button type="button" id="send-message-btn" class="text-white rounded-md px-5 py-1.5 mx-1.5 hover:bg-black hover:scale-x-105 transition">send</button>
     </form>
 </div>

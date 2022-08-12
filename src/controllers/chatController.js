@@ -65,9 +65,9 @@ module.exports.api_post_messages = async function(req, res) {
     const mongodb = require('../connectDB')();
     let chats = mongodb.collection('chats');
     let ObjectId = require('mongodb').ObjectId;
-
+    
     let newMessage = {
-        user_sender: new ObjectId(req.body.user_sender),
+        user_sender: new ObjectId(req.session.user._id),
         text: req.body.content_text,
         created_at: new Date()
     };
