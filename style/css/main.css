@@ -1,4 +1,5 @@
 @tailwind base;
+
 @tailwind components;
 
 @font-face {
@@ -17,6 +18,5 @@
 .people-operation-btn {
     @apply py-1 px-3 rounded-md text-sm shadow;
 }
-
 
 @tailwind utilities;
