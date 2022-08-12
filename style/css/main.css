@@ -10,4 +10,13 @@
     @apply block w-full p-1.5 rounded-md border border-gray-300 outline-0 focus:border-green-400;
 }
 
+.person-item {
+    @apply flex justify-between w-4/5 border border-gray-50 p-4 my-1.5 mx-auto rounded-md bg-white;
+}
+
+.people-operation-btn {
+    @apply py-1 px-3 rounded-md text-sm shadow;
+}
+
+
 @tailwind utilities;
