@@ -6,7 +6,7 @@ module.exports = {
         
         var ObjectId = require('mongodb').ObjectId;
         let authed_user = await users.findOne({_id: new ObjectId(user._id)});
-        let friends_list = authed_user.friends;
+        let friends_list = (authed_user.friends)? authed_user.friends : [];
         let friends_ids = [];
         friends_ids.push(new ObjectId(user._id))
         friends_list.map(friend => friends_ids.push(new ObjectId(friend.id)))
@@ -20,7 +20,7 @@ module.exports = {
         
         var ObjectId = require('mongodb').ObjectId;
         let authed_user = await users.findOne({_id: new ObjectId(user._id)});
-        let friends_list = authed_user.friends;
+        let friends_list = (authed_user.friends)? authed_user.friends : [];
         let friends_ids = [];
         friends_list.map(friend => friends_ids.push(new ObjectId(friend.id)))
 
@@ -32,7 +32,7 @@ module.exports = {
         const users = mongodb.collection('users');
         var ObjectId = require('mongodb').ObjectId;
         let authed_user = await users.findOne({_id: new ObjectId(user._id)});
-        let friendship_requests_list = authed_user.friendship_requests;
+        let friendship_requests_list = (authed_user.friendship_requests)? authed_user.friendship_requests : [];
         let users_ids = [];
         friendship_requests_list.map(requestUser => users_ids.push(new ObjectId(requestUser.id)))
 
@@ -75,6 +75,8 @@ module.exports = {
             {_id: new ObjectId(user_id)},
             {$push: {friends: {id: new ObjectId(authed_user._id)} }}
         );
+
+        authed_user.friends = (authed_user.friends)? authed_user.friends : [];
         authed_user.friends.push({id: new ObjectId(user_id)});
         return authed_user.friends;
     },

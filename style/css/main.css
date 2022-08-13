@@ -7,6 +7,7 @@
     src: url('/fonts/cairo/Cairo-Regular.ttf');
 }
 
+
 .form-input {
     @apply block w-full p-1.5 rounded-md border border-gray-300 outline-0 focus:border-green-400;
 }

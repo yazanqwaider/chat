@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/dist/main.css">
+    <link rel="stylesheet" href="/css/fontawesome.min.css" />
     <title>People</title>
 </head>
 
@@ -16,6 +17,7 @@
 
             <% for(let i = 0; i < friends.length; i++) { %>
                 <button class="chat-item" data-userId="<%= friends[i]._id %>">
+                    <i class="fa-solid fa-user-large"></i> 
                     <%= friends[i].username %>
                 </button>
             <% } %>
