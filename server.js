@@ -44,6 +44,12 @@ io.on('connection', socket => {
         }
     });
 
+    socket.on('typingNow', function(statusObject) {
+        if(users[statusObject.receiver_id]) {
+            socket.to(users[statusObject.receiver_id]).emit('typingNow', JSON.stringify(statusObject));
+        }
+    });
+
     socket.on('disconnect', (reason) => {
         console.log('connected closed');
     });

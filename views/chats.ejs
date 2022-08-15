@@ -49,6 +49,17 @@
             document.querySelector('.messages-layout').innerHTML+= message;
         });
 
+
+        socket.on('typingNow', function(statusObject) {
+            statusObject = JSON.parse(statusObject);
+            if(statusObject.typing_status) {
+                document.querySelector('.typing-status').textContent = "Typing now ...";
+            }
+            else {
+                document.querySelector('.typing-status').textContent = "";
+            }
+        });
+
         const chatItems = document.querySelectorAll('.chat-item');
         chatItems.forEach(chatItem => {
             chatItem.addEventListener('click', function() {
@@ -90,6 +101,30 @@
                 });
         }
     
+
+        const messageInput = document.getElementById('message');
+
+        messageInput.addEventListener('focus', function() {
+            if(active_chat_friend != null) {
+                const typingNowObject = {
+                    receiver_id: active_chat_friend.user_id,
+                    chat_id: active_chat_friend.chat_id,
+                    typing_status: true
+                };
+                socket.emit("typingNow", typingNowObject);
+            }
+        });
+
+        messageInput.addEventListener('blur', function() {
+            if(active_chat_friend != null) {
+                const typingNowObject = {
+                    receiver_id: active_chat_friend.user_id,
+                    chat_id: active_chat_friend.chat_id,
+                    typing_status: false
+                };
+                socket.emit("typingNow", typingNowObject);
+            }
+        });
         
         document.getElementById('send-message-btn').addEventListener('click', function(e) {
             e.preventDefault();
