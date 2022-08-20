@@ -7,7 +7,7 @@ const peopleController = require('../src/controllers/peopleController');
 const authMiddleware = require('../src/middleware/authMiddleware');
 
 router.get('/', (req, res) => {
-    let user = req.session.user;
+    let user = JSON.parse(req.cookies.user);
     res.render('welcome', {user});
 })
 

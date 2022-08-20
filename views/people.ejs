@@ -37,8 +37,6 @@
     </div>
 
     <script>
-        const token = localStorage.getItem('token');
-
         const explore_btn = document.getElementById('explore_btn');
         explore_btn.addEventListener('click', function() {
             getPeople('explore');
@@ -120,10 +118,7 @@
 
         function getPeople(type) {
             fetch(`/api/people?type=${type}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
+                headers: {'Content-Type': 'application/json'}
             })
             .then((res) => res.json())
             .then((response) => {
@@ -160,10 +155,7 @@
 
         async function toggleFriendConnection(required_action, user_id) {
             return await fetch(`/api/people/${required_action}/${user_id}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: {'Content-Type': 'application/json'},
                 method: 'POST'
             })
             .then((res) => res.json())
@@ -172,10 +164,7 @@
 
         async function responseFriendRequest(required_action, user_id) {
             return await fetch(`/api/response-friend-request/${required_action}/${user_id}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: {'Content-Type': 'application/json'},
                 method: 'POST'
             })
             .then((res) => res.json())

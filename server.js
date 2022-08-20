@@ -1,8 +1,8 @@
 const express = require('express');
 const http = require('http');
 const path = require('path');
-const session = require('express-session')
 const { Server } = require("socket.io");
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 
@@ -13,12 +13,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/public'));
 app.use(express.json());
-
-app.use(session({
-    secret: process.env.ACCESS_TOKEN_SECRET,
-    saveUninitialized: false,
-    resave: false
-}))
+app.use(cookieParser());
 
 
 /** Routes */
@@ -26,7 +21,6 @@ const webRoutes = require('./routes/web');
 const apiRoutes = require('./routes/api');
 app.use(webRoutes);
 app.use(apiRoutes);
-
 
 const server = http.createServer(app);
 const io = new Server(server);

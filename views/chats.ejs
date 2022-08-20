@@ -30,9 +30,7 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const token = localStorage.getItem('token');
         const user = JSON.parse(localStorage.getItem('user'));
-
         let active_chat_friend = null;
 
         var socket = io();
@@ -69,7 +67,7 @@
         });
 
         async function getMessages(userId) {
-            fetch(`/api/chats/${userId}`, {headers: {"Authorization": `Bearer ${token}`, "Content-Type": "application/json"}})
+            fetch(`/api/chats/${userId}`, {headers: {"Content-Type": "application/json"}})
                 .then((response) => response.json()).then((res) => {
                     // console.log(res);
                     const chat = res.chat;
@@ -136,7 +134,7 @@
                 fetch(`/api/chats/${active_chat_friend.chat_id}/messages`, 
                     {
                         method: 'POST',
-                        headers: {"Authorization": `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
                             content_text: messageText.value
                         })

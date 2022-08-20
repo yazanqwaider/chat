@@ -1,27 +1,30 @@
 module.exports.chats_get = async function(req, res) {
+    const mongodb = require('../connectDB')();
     const ObjectId = require('mongodb').ObjectId;
     let friendsIds = [];
-    if(req.session.user.friends) {
-        req.session.user.friends.forEach(function(friendId) {
-            friendsIds.push(new ObjectId(friendId));
-        })
+
+    let authUser = JSON.parse(req.cookies.user);
+    let usersCollection = mongodb.collection('users');
+    authUser = await usersCollection.findOne({_id: new ObjectId(authUser._id) });
+
+    if(authUser.friends) {
+        authUser.friends.forEach(function(friend) {
+            friendsIds.push(friend.id);
+        });
     }
 
-    const mongodb = require('../connectDB')();
-    let users = mongodb.collection('users');
-    let friends = await users.find({_id: {$in: friendsIds}}).toArray();
-
+    let friends = await usersCollection.find({_id: {$in: friendsIds}}).toArray();
     res.render('chats', {friends: friends});
 }
 
 
 module.exports.api_get_messages = async function(req, res) {
-    let authUser = req.session.user;
-    let friendUserId = req.params.user_id;
-
     const mongodb = require('../connectDB')();
     let chats = mongodb.collection('chats');
     let ObjectId = require('mongodb').ObjectId;
+
+    let authUser = JSON.parse(req.cookies.user);
+    let friendUserId = req.params.user_id;
     
     let users = mongodb.collection('users');
     authUser = await users.findOne({_id: new ObjectId(authUser._id) });
@@ -52,9 +55,6 @@ module.exports.api_get_messages = async function(req, res) {
         );
 
         chat = await chats.findOne({_id: createdChat.insertedId});
-        req.session.save(function() {
-            req.session.user = authUser
-        });
     }
 
     res.json({chat: chat});
@@ -65,9 +65,10 @@ module.exports.api_post_messages = async function(req, res) {
     const mongodb = require('../connectDB')();
     let chats = mongodb.collection('chats');
     let ObjectId = require('mongodb').ObjectId;
+    let authUser = JSON.parse(req.cookies.user);
     
     let newMessage = {
-        user_sender: new ObjectId(req.session.user._id),
+        user_sender: new ObjectId(authUser._id),
         text: req.body.content_text,
         created_at: new Date()
     };

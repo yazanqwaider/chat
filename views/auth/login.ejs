@@ -59,8 +59,6 @@
             .then(data => {
                 if(data.status) {
                     localStorage.setItem('user', JSON.stringify(data.user));
-                    localStorage.setItem('token', data.token);
-
                     socket.emit('connected', data.user._id);
 
                     setTimeout(() => {
