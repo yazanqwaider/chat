@@ -10,6 +10,8 @@
 </head>
 
 <body>
+    <%- include('layouts/header.ejs'); %>
+
     <div class="flex">
         <div class="w-1/5 h-screen flex flex-col bg-black py-2">
             <button id="explore_btn" class="w-11/12 p-2 bg-white bg-opacity-10 text-white rounded-full mx-auto my-1.5 transition hover:text-green-500 hover:border hover:border-green-500">Explore</button>
@@ -18,11 +20,6 @@
         </div>
 
         <div class="w-4/5 p-4 bg-black bg-opacity-5">
-            <div class="flex justify-between">
-                <a href="/" class="border-b border-b-gray-500">home <i class="fa-solid fa-house"></i></a>
-                <a href="/chats" class="border-b border-b-gray-500">chats <i class="fa-solid fa-comments"></i></a>
-            </div>
-
             <div class="people-layout">
                 <% for(let i = 0; i < unfriendPeople.length; i++) { %>
                     <div class="person-item">

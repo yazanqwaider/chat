@@ -5,7 +5,7 @@ module.exports = {
         const users = mongodb.collection('users');
         
         var ObjectId = require('mongodb').ObjectId;
-        let authed_user = await users.findOne({_id: new ObjectId(user._id)});
+        let authed_user = await users.findOne({_id: user._id});
         let friends_list = (authed_user.friends)? authed_user.friends : [];
         let friends_ids = [];
         friends_ids.push(new ObjectId(user._id))
@@ -41,57 +41,47 @@ module.exports = {
     },
 
 
-    async requestFriendship(authed_user, user_id) {
+    async requestFriendship(authed_user_id, user_id) {
         const users = mongodb.collection('users');
-
         var ObjectId = require('mongodb').ObjectId;
-        await users.updateOne({_id: new ObjectId(user_id)}, {$push: {"friendship_requests": {id: new ObjectId(authed_user._id)} }});
+        await users.updateOne({_id: new ObjectId(user_id)}, {$push: {"friendship_requests": {id: new ObjectId(authed_user_id)} }});
         return true;
     },
 
-    async removeFriendship(authed_user, user_id) {
+    async removeFriendship(authed_user_id, user_id) {
         const users = mongodb.collection('users');
-
         var ObjectId = require('mongodb').ObjectId;
-        await users.updateOne({_id: new ObjectId(authed_user._id)}, {$pull: {"friends": {id: new ObjectId(user_id)} }})
-        let index = authed_user.friends.findIndex((friend) => friend.id == user_id);
-        authed_user.friends.splice(index, 1);
-        return authed_user.friends;
+        await users.updateOne({_id: new ObjectId(authed_user_id)}, {$pull: {"friends": {id: new ObjectId(user_id)} }});
+        return true;
     },
 
-    async acceptFriendship(authed_user, user_id) {
+    async acceptFriendship(authed_user_id, user_id) {
         const users = mongodb.collection('users');
         var ObjectId = require('mongodb').ObjectId;
     
         await users.updateOne(
-            {_id: new ObjectId(authed_user._id)},
+            {_id: new ObjectId(authed_user_id)},
             {$pull: {friendship_requests: {id: new ObjectId(user_id)} }}
         );
         await users.updateOne(
-            {_id: new ObjectId(authed_user._id)},
+            {_id: new ObjectId(authed_user_id)},
             {$push: {friends: {id: new ObjectId(user_id)} }}
         );
         await users.updateOne(
             {_id: new ObjectId(user_id)},
-            {$push: {friends: {id: new ObjectId(authed_user._id)} }}
+            {$push: {friends: {id: new ObjectId(authed_user_id)} }}
         );
 
-        authed_user.friends = (authed_user.friends)? authed_user.friends : [];
-        authed_user.friends.push({id: new ObjectId(user_id)});
-        return authed_user.friends;
+        return true;
     },
     
-    async declineFriendship(authed_user, user_id) {
+    async declineFriendship(authed_user_id, user_id) {
         const users = mongodb.collection('users');
-
         var ObjectId = require('mongodb').ObjectId;
         await users.updateOne(
-            {_id: new ObjectId(authed_user._id)}, 
+            {_id: new ObjectId(authed_user_id)}, 
             {$pull: {friendship_requests: {id: new ObjectId(user_id)}}}
         );
-
-        let index = authed_user.friendship_requests.findIndex((friend) => friend.id == user_id);
-        authed_user.friendship_requests.splice(index, 1);
-        return authed_user.friendship_requests;
+        return true;
     }
 }

@@ -1,11 +1,13 @@
+const jwt = require('jsonwebtoken');
+
 module.exports.chats_get = async function(req, res) {
     const mongodb = require('../connectDB')();
     const ObjectId = require('mongodb').ObjectId;
     let friendsIds = [];
 
-    let authUser = JSON.parse(req.cookies.user);
+    let authUser = res.locals.user;
     let usersCollection = mongodb.collection('users');
-    authUser = await usersCollection.findOne({_id: new ObjectId(authUser._id) });
+    authUser = await usersCollection.findOne({_id: authUser._id });
 
     if(authUser.friends) {
         authUser.friends.forEach(function(friend) {
@@ -23,11 +25,11 @@ module.exports.api_get_messages = async function(req, res) {
     let chats = mongodb.collection('chats');
     let ObjectId = require('mongodb').ObjectId;
 
-    let authUser = JSON.parse(req.cookies.user);
+    let authUser = res.locals.user;
     let friendUserId = req.params.user_id;
     
     let users = mongodb.collection('users');
-    authUser = await users.findOne({_id: new ObjectId(authUser._id) });
+    authUser = await users.findOne({_id: authUser._id });
     let authUserChats = authUser.chats;
 
     let chat = null;
@@ -65,10 +67,10 @@ module.exports.api_post_messages = async function(req, res) {
     const mongodb = require('../connectDB')();
     let chats = mongodb.collection('chats');
     let ObjectId = require('mongodb').ObjectId;
-    let authUser = JSON.parse(req.cookies.user);
+    let authUserId = jwt.decode(req.cookies.token);
     
     let newMessage = {
-        user_sender: new ObjectId(authUser._id),
+        user_sender: new ObjectId(authUserId),
         text: req.body.content_text,
         created_at: new Date()
     };

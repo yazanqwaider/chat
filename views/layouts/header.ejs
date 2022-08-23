@@ -1,0 +1,19 @@
+<div class="flex items-center justify-between h-16 bg-white shadow-sm px-5">
+    <div>
+        <a href="/" class="border-b border-b-gray-500 mx-3">
+            home <i class="fa-solid fa-house"></i>
+        </a>
+    
+        <a href="/chats" class="border-b border-b-gray-500 mx-3">
+            chats <i class="fa-solid fa-comments"></i>
+        </a>
+    </div>
+   
+    <% if(user) { %>
+        <div>
+            <a href="/logout">
+                logout <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </a>
+        </div>
+    <% } %>
+</div>

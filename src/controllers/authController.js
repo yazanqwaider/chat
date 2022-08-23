@@ -1,6 +1,6 @@
 module.exports.login_get = function (req, res) {
     res.render('auth/login');
-}
+};
 
 module.exports.login_post = async function(req, res) {
     const auth = require('../auth');
@@ -8,9 +8,8 @@ module.exports.login_post = async function(req, res) {
 
     const expire_date = 1000 * 60 * 60 * 24 * 3;
     res.cookie("token", result.token, {maxAge: expire_date, httpOnly: false});
-    res.cookie("user", JSON.stringify(result.user), {maxAge: expire_date});
     res.json(result);
-}
+};
 
 
 module.exports.signup_get = function(req, res) {
@@ -24,6 +23,10 @@ module.exports.signup_post = async function(req, res) {
     const result = await auth.signup(userData);
     const expire_date = 1000 * 60 * 60 * 24 * 3;
     res.cookie("token", result.token, {maxAge: expire_date, httpOnly: false});
-    res.cookie("user", JSON.stringify(result.user), {maxAge: expire_date});
     res.json(result);
-}
+};
+
+module.exports.logout_get = async function(req, res) {
+    res.cookie('token', '', 1);
+    res.redirect('/');
+};

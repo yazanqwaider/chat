@@ -9,19 +9,18 @@ module.exports = {
         return user;
     },
 
-    generateAccessToken(user) {
-        return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+    generateAccessToken(user_id) {
+        return jwt.sign(user_id.toString(), process.env.ACCESS_TOKEN_SECRET);
     },
 
     async login(username, password) {
         const user = await this.checkUserExist(username);
         if(user) {
             const bcrypt = require('bcrypt');
-            const salt = await bcrypt.genSalt();
             let is_valid_password = await bcrypt.compare(password, user.password);
 
             if(is_valid_password) {
-                return {status: true, user: user, token: this.generateAccessToken(user)};
+                return {status: true, user: user, token: this.generateAccessToken(user._id)};
             }
         }
         return {status: false, message: "Your data is invalid !"};
@@ -30,7 +29,7 @@ module.exports = {
     async loginById(id) {
         const users = mongodb.collection('users');
         const user = await users.findOne({_id: id});
-        return this.generateAccessToken(user);
+        return this.generateAccessToken(user._id);
     },
 
     async signup(userData) {
@@ -63,6 +62,6 @@ module.exports = {
         else {
             return {status: false, message: 'This account have already exists, please try login.'};
         }
-        return {status: true, user: user, token: this.generateAccessToken(user)};
+        return {status: true, user: user, token: this.generateAccessToken(user._id)};
     }
 }

@@ -6,10 +6,12 @@ const chatsController = require('../src/controllers/chatController');
 const peopleController = require('../src/controllers/peopleController');
 const authMiddleware = require('../src/middleware/authMiddleware');
 
+
+router.get('/*', authMiddleware.getUserObject);
+
 router.get('/', (req, res) => {
-    let user = JSON.parse(req.cookies.user);
-    res.render('welcome', {user});
-})
+    res.render('welcome');
+});
 
 router.get('/login', authMiddleware.checkGuest, authController.login_get);
 
@@ -19,6 +21,7 @@ router.get('/signup', authMiddleware.checkGuest, authController.signup_get);
 
 router.post('/signup', authMiddleware.checkGuest, authController.signup_post);
 
+router.get('/logout', authController.logout_get);
 
 router.get('/chats', authMiddleware.checkAuthentication, chatsController.chats_get);
 
