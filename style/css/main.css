@@ -16,6 +16,14 @@
     @apply flex justify-between w-4/5 border border-gray-50 p-4 my-1.5 mx-auto rounded-md bg-white;
 }
 
+.people-menu-item {
+    @apply w-11/12 p-2 bg-white bg-opacity-10 text-white rounded-full mx-auto my-1.5 transition hover:text-green-300 border border-transparent hover:border-gray-500;
+}
+
+.people-menu-item.active {
+    @apply text-green-500 border border-green-500;
+}
+
 .people-operation-btn {
     @apply py-1 px-3 rounded-md text-sm shadow;
 }

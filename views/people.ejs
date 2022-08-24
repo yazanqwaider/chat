@@ -14,9 +14,9 @@
 
     <div class="flex">
         <div class="w-1/5 h-screen flex flex-col bg-black py-2">
-            <button id="explore_btn" class="w-11/12 p-2 bg-white bg-opacity-10 text-white rounded-full mx-auto my-1.5 transition hover:text-green-500 hover:border hover:border-green-500">Explore</button>
-            <button id="friends_btn" class="w-11/12 p-2 bg-white bg-opacity-10 text-white rounded-full mx-auto my-1.5 transition hover:text-green-500 hover:border hover:border-green-500">Friends</button>
-            <button id="requests_btn" class="w-11/12 p-2 bg-white bg-opacity-10 text-white rounded-full mx-auto my-1.5 transition hover:text-green-500 hover:border hover:border-green-500">Requests</button>
+            <button id="explore_btn" class="people-menu-item active">Explore</button>
+            <button id="friends_btn" class="people-menu-item">Friends</button>
+            <button id="requests_btn" class="people-menu-item">Requests</button>
         </div>
 
         <div class="w-4/5 p-4 bg-black bg-opacity-5">
@@ -35,19 +35,20 @@
 
     <script>
         const explore_btn = document.getElementById('explore_btn');
-        explore_btn.addEventListener('click', function() {
-            getPeople('explore');
-        });
-
         const friends_btn = document.getElementById('friends_btn');
-        friends_btn.addEventListener('click', function() {
-            getPeople('friends');
-        });
-
         const requests_btn = document.getElementById('requests_btn');
-        requests_btn.addEventListener('click', function() {
-            getPeople('requested');
-        });
+        handleClickEventOnMenuItem(explore_btn, "explore");
+        handleClickEventOnMenuItem(friends_btn, "friends");
+        handleClickEventOnMenuItem(requests_btn, "requested");
+
+        function handleClickEventOnMenuItem(btn, action_type) {
+            btn.addEventListener('click', function() {
+                getPeople(action_type);
+                document.querySelector('.active').classList.remove('active');
+                btn.classList.add('active');
+            });
+        }
+    
 
         handleFriendOperations();
 
