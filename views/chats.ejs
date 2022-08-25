@@ -168,6 +168,30 @@
         });
 
 
+        const imageFilesInput = document.getElementById('image_file');
+        let images = [];
+
+        images = new Proxy(images, {
+            set(target, property, file) {
+                target[property] = file;
+
+                let preview_images = "";
+                target.forEach((img) => {
+                    preview_images+= `
+                        <img src="${URL.createObjectURL(img)}" class="w-24 mx-2 rounded">
+                    `;
+                });
+                document.querySelector('.images-preview-layout').innerHTML = preview_images;
+            },
+        });
+
+        imageFilesInput.addEventListener('change', function(e) {
+            for (let i = 0; i < e.target.files.length; i++) {
+                images[images.length + i] = e.target.files[i];
+            }
+        });
+
+
         function createMessageItem(message) {
             const side_class = (message.user_sender == user._id)? 'message_owner' : 'message_receiver';
             return `

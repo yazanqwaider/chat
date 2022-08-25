@@ -1,10 +1,24 @@
 <div class="messages-layout basis-4/5 flex flex-col items-start p-5 overflow-auto" style="min-height: 83vh; max-height: 86vh;"></div>
 
 <div class="message-form-layout p-3 border-t border-t-gray-300">
+    <div class="images-preview-layout flex"></div>
+
     <span class="typing-status text-sm text-green-500"></span>
     <form method="post" id="message-form" class="flex justify-center items-center">
+
+        <!-- Images content input -->
+        <div>
+            <label for="image_file" class="p-2 mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all" title="Images">
+                <i class="fas fa-image"></i>
+            </label>
+            <input type="file" id="image_file" multiple accept="image/*" class="hidden">
+        </div>
+
+        <!-- Text content input -->
         <input type="text" name="message" id="message" class="px-2 py-1.5 w-3/5 border border-gray-200 rounded-md outline-0 hover:border-gray-400 focus:border-gray-400 transition" 
                 placeholder="Type message here" autocomplete="off" required>
+        
+
         <button type="button" id="send-message-btn" class="text-white rounded-md px-5 py-1.5 mx-1.5 hover:bg-black hover:scale-x-105 transition">
             send <i class="fa-solid fa-paper-plane"></i>
         </button>
