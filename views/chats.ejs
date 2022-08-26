@@ -81,7 +81,6 @@
                     let messagesElm = "";
                     if(chat.hasOwnProperty('messages')) {
                         const messages = chat.messages;
-                        console.log(messages);
                         messages.forEach((message) => {
                             messagesElm+= createMessageItem(message);
                         });
@@ -101,6 +100,38 @@
                 });
         }
     
+
+        const imageFilesInput = document.getElementById('image_file');
+
+        let images = defineImages();
+
+        function defineImages() {
+            return new Proxy([], {
+                set(target, property, file) {
+                    target[property] = file;
+
+                    let preview_images = "";
+                    target.forEach((img, index) => {
+                        preview_images+= `
+                            <div class="relative">
+                                <button class="remove-img-btn bg-red-500  w-5 rounded-md text-sm text-white absolute top-0.5 right-1.5" data-imgIndex="${index}">x</button>
+                                <img src="${URL.createObjectURL(img)}" class="w-24 mx-2 rounded">
+                            </div>
+                        `;
+                    });
+                    document.querySelector('.images-preview-layout').innerHTML = preview_images;
+
+                    handleRemoveImageBtnsEvents();
+                },
+            });
+        }
+
+        imageFilesInput.addEventListener('change', function(e) {
+            for (let i = 0; i < e.target.files.length; i++) {
+                images[images.length + i] = e.target.files[i];
+            }
+        });
+
 
         const messageInput = document.getElementById('message');
 
@@ -133,13 +164,16 @@
             let messageText = document.querySelector('#message-form #message');
 
             if(messageText && active_chat_friend) {
+                let formData = new FormData();
+                formData.append('content_text', messageText.value);
+                images.forEach((img) => {
+                    formData.append('images', img);
+                });
+
                 fetch(`/api/chats/${active_chat_friend.chat_id}/messages`, 
                     {
                         method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            content_text: messageText.value
-                        })
+                        body: formData
                     }
                 )
                 .then((res) => res.json())
@@ -153,6 +187,7 @@
 
                         document.querySelector('.messages-layout').innerHTML+= message;
                         document.querySelector('#message-form #message').value = "";
+                        images.splice(0, images.length);
 
                         const sender_id = JSON.parse(localStorage.getItem('user'))._id;
                         let msgObject = {
@@ -168,37 +203,37 @@
         });
 
 
-        const imageFilesInput = document.getElementById('image_file');
-        let images = [];
-
-        images = new Proxy(images, {
-            set(target, property, file) {
-                target[property] = file;
-
-                let preview_images = "";
-                target.forEach((img) => {
-                    preview_images+= `
-                        <img src="${URL.createObjectURL(img)}" class="w-24 mx-2 rounded">
-                    `;
-                });
-                document.querySelector('.images-preview-layout').innerHTML = preview_images;
-            },
-        });
-
-        imageFilesInput.addEventListener('change', function(e) {
-            for (let i = 0; i < e.target.files.length; i++) {
-                images[images.length + i] = e.target.files[i];
-            }
-        });
-
-
         function createMessageItem(message) {
             const side_class = (message.user_sender == user._id)? 'message_owner' : 'message_receiver';
+
+            let images = "<div class='flex'>";
+            if(message.hasOwnProperty('images')) {
+                var ASSET_URL= '<%= process.env.ASSET_URL %>';
+
+                message.images.forEach((img) => {
+                    images+= `
+                        <img src="${ASSET_URL + img}" class="w-36" alt="message image">
+                    `;
+                });
+            }
+            images+= "</div>";
+        
             return `
                 <div class="message-item ${side_class}">
+                    ${images} 
                     ${message.text}
                 </div>
             `;
+        }
+
+        function handleRemoveImageBtnsEvents() {
+            const remove_img_btns = document.querySelectorAll('.remove-img-btn');
+            remove_img_btns.forEach((btn) => {
+                btn.addEventListener('click', function() {
+                    const index = this.getAttribute('data-imgIndex');                
+                    images.splice(index, 1);
+                });
+            });
         }
     </script>
 </body>

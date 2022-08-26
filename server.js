@@ -3,6 +3,7 @@ const http = require('http');
 const path = require('path');
 const { Server } = require("socket.io");
 const cookieParser = require('cookie-parser');
+var multer = require('multer');
 require('dotenv').config();
 
 
@@ -12,6 +13,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/public'));
+
 app.use(express.json());
 app.use(cookieParser());
 

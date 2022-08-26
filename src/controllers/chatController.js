@@ -69,9 +69,15 @@ module.exports.api_post_messages = async function(req, res) {
     let ObjectId = require('mongodb').ObjectId;
     let authUserId = jwt.decode(req.cookies.token);
     
+    let images = [];
+    req.files.forEach((file) => {
+        images.push(file.path.split('public\\')[1]);
+    });
+
     let newMessage = {
         user_sender: new ObjectId(authUserId),
         text: req.body.content_text,
+        images: images,
         created_at: new Date()
     };
 

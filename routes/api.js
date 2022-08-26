@@ -1,4 +1,5 @@
 const {Router} = require('express');
+const multer = require('multer');
 
 const router = Router();
 
@@ -15,6 +16,19 @@ router.post('/api/response-friend-request/:required_action/:id', peopleControlle
 
 
 router.get('/api/chats/:user_id', chatController.api_get_messages);
-router.post('/api/chats/:chat_id/messages', chatController.api_post_messages);
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public/messages/images')
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = req.params.chat_id + '-' +  Date.now();
+      const extension = file.mimetype.split('/')[1];
+      cb(null, uniqueSuffix + '.' + extension);
+    }
+});
+const upload = multer({ storage: storage });
+router.post('/api/chats/:chat_id/messages', upload.array('images', 4), chatController.api_post_messages);
 
 module.exports = router;
