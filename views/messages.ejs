@@ -1,14 +1,44 @@
-<div class="messages-layout basis-4/5 flex flex-col items-start p-5 overflow-auto" style="min-height: 74vh; max-height: 85vh;"></div>
+<div class="messages-layout basis-4/5 flex flex-col items-start p-5 overflow-auto" style="max-height: 85vh;"></div>
 
 <div class="message-form-layout p-3 border-t border-t-gray-300">
     <div class="images-preview-layout flex"></div>
 
+    <div class="audio-preview-layout flex justify-center items-center">
+        <img src="/images/waves.gif" class="sound_waves w-24 h-11 mx-2 hidden" alt="sound waves">
+        <span id="seconds_timer"></span>
+        <div id="preview-audio-player"></div>
+    </div>
+
     <span class="typing-status text-sm text-green-500"></span>
     <form method="post" id="message-form" class="flex justify-center items-center">
+        <!-- Audio content input -->
+        <div class="audio-form">
+            <div class="audio-operations flex">
+                <button id="record-audio-btn" type="button" class="p-2 mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all" title="Record audio">
+                    <i class="fa-solid fa-microphone"></i>
+                </button>
+
+                <button id="resume-audio-btn" type="button" class="p-2 mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all hidden" title="Resume audio">
+                    <i class="fa-solid fa-microphone"></i>
+                </button>
+    
+                <button id="pause-audio-btn" type="button" class="p-2 mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all hidden" title="Pause audio">
+                    <i class="fa-solid fa-pause"></i>
+                </button>
+    
+                <button id="stop-audio-btn" type="button" class="p-2 mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all hidden" title="Stop audio">
+                    <i class="fa-solid fa-stop"></i>
+                </button>
+    
+                <button id="delete-audio-btn" type="button" class="p-2 mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all hidden" title="Delete audio">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        </div>
 
         <!-- Images content input -->
-        <div>
-            <label for="image_file" class="p-2 mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all" title="Images">
+        <div class="image-form">
+            <label for="image_file" class="p-2 mx-1.5 text-lg inline-block hover:cursor-pointer hover:scale-125 transition-all" title="Images">
                 <i class="fas fa-image"></i>
             </label>
             <input type="file" id="image_file" multiple accept="image/*" class="hidden">

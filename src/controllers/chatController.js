@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 
 module.exports.chats_get = async function(req, res) {
     const mongodb = require('../connectDB')();
-    const ObjectId = require('mongodb').ObjectId;
     let friendsIds = [];
 
     let authUser = res.locals.user;
