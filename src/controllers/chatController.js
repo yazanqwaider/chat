@@ -68,6 +68,22 @@ module.exports.api_post_messages = async function(req, res) {
     let ObjectId = require('mongodb').ObjectId;
     let authUserId = jwt.decode(req.cookies.token);
     
+    let audio_record_path = null;
+    if(req.body.type == 'audio') {
+        const fs = require("fs")
+        const uniqueSuffix = req.params.chat_id + '-' +  Date.now();
+        audio_record_path = `messages/audios/${uniqueSuffix}.webm`;
+
+        const buffer = Buffer.from(
+            req.body.content_audio.split('base64,')[1], // content after base64,
+            'base64'
+        );
+
+        fs.writeFile(`public/${audio_record_path}`, buffer, (err) => {
+            console.log(err);
+        });
+    }
+
     let images = [];
     req.files.forEach((file) => {
         images.push(file.path.split('public\\')[1]);
@@ -75,8 +91,10 @@ module.exports.api_post_messages = async function(req, res) {
 
     let newMessage = {
         user_sender: new ObjectId(authUserId),
+        type: req.body.type,
         text: req.body.content_text,
         images: images,
+        audio_path: audio_record_path,
         created_at: new Date()
     };
 

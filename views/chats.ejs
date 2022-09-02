@@ -170,67 +170,105 @@
             let form = document.getElementById('message-form');
             let messageText = document.querySelector('#message-form #message');
 
-            if(messageText && active_chat_friend) {
+            if(active_chat_friend) {
                 let formData = new FormData();
-                formData.append('content_text', messageText.value);
-                images.forEach((img) => {
-                    formData.append('images', img);
-                });
+                let type = null;
+                const temp_audio_as_base64 = sessionStorage.getItem('temp_audio_as_base64');
 
-                fetch(`/api/chats/${active_chat_friend.chat_id}/messages`, 
-                    {
-                        method: 'POST',
-                        body: formData
-                    }
-                )
-                .then((res) => res.json())
-                .then((response) => {
-                    // console.log(response);
-                    if(response.status) {
-                        let message = createMessageItem(response.message);
-                        if(document.querySelector('.no-messages-yet')) {
-                            document.querySelector('.no-messages-yet').remove();
+                if(temp_audio_as_base64) {
+                    type = "audio";
+                    formData.append('content_audio', temp_audio_as_base64);
+                }
+                else if(images.length > 0) {
+                    type = "image";
+                    images.forEach((img) => {
+                        formData.append('images', img);
+                    });
+                }
+                else if(messageText) {
+                    type = "text";
+                    formData.append('content_text', messageText.value);
+                }
+
+                if(type != null) {
+                    formData.append('type', type);
+
+                    fetch(`/api/chats/${active_chat_friend.chat_id}/messages`, 
+                        {
+                            method: 'POST',
+                            body: formData
                         }
+                    )
+                    .then((res) => res.json())
+                    .then((response) => {
+                        // console.log(response);
+                        if(response.status) {
+                            let message = createMessageItem(response.message);
+                            if(document.querySelector('.no-messages-yet')) {
+                                document.querySelector('.no-messages-yet').remove();
+                            }
 
-                        document.querySelector('.messages-layout').innerHTML+= message;
-                        document.querySelector('#message-form #message').value = "";
-                        images.splice(0, images.length);
+                            document.querySelector('.messages-layout').innerHTML+= message;
+                            document.querySelector('#message-form #message').value = "";
+                            if(type == 'image') {
+                                images.splice(0, images.length);
+                            }
+                            else if(type == 'audio'){
+                                sessionStorage.removeItem('temp_audio_as_base64');
+                                document.getElementById('seconds_timer').innerText = "0.00";
+                                document.getElementById('seconds_timer').style.display = "none";
+                                document.getElementById('preview-audio-player').innerHTML = "";
+                                hideAudioBtns(['delete']);
+                                showAudioBtns(['record']);
 
-                        const sender_id = JSON.parse(localStorage.getItem('user'))._id;
-                        let msgObject = {
-                            sender_id: sender_id,
-                            receiver_id: active_chat_friend.user_id,
-                            messageText: response.message.text
-                        };
+                                document.querySelector('.image-form').style.display = "inline-block";
+                                document.querySelector('#message').style.display = "inline-block";
+                            }
 
-                        socket.emit("messageSended", msgObject);
-                    }
-                });
+                            const sender_id = JSON.parse(localStorage.getItem('user'))._id;
+                            let msgObject = {
+                                sender_id: sender_id,
+                                receiver_id: active_chat_friend.user_id,
+                                messageText: response.message.text
+                            };
+
+                            socket.emit("messageSended", msgObject);
+                        }
+                    });
+                }
             }
         });
 
 
         function createMessageItem(message) {
             const side_class = (message.user_sender == user._id)? 'message_owner' : 'message_receiver';
+            var ASSET_URL= '<%= process.env.ASSET_URL %>';
+            let item = `<div class="message-item ${side_class}">`;
 
-            let images = "<div class='flex'>";
-            if(message.hasOwnProperty('images')) {
-                var ASSET_URL= '<%= process.env.ASSET_URL %>';
-
+            if(message.type == 'image') {
+                let images = "<div class='flex'>";
                 message.images.forEach((img) => {
                     images+= `
                         <img src="${ASSET_URL + img}" class="w-36" alt="message image">
                     `;
                 });
+                images+= "</div>";
+                item+= `${images}`;
             }
-            images+= "</div>";
-        
-            return `
-                <div class="message-item ${side_class}">
-                    ${images} 
-                    ${message.text}
-                </div>
-            `;
+            else if(message.type == 'audio') {
+                item+= `
+                    <audio controls>
+                        <source src="${ASSET_URL + message.audio_path}" type="audio/mp3">
+                        Your browser does not support the audio tag.
+                    </audio>
+                `;
+            }
+            else if(message.type == 'text') {
+                item+= `${message.text}`;
+            }
+            
+            item+= '</div>';
+            return item;
         }
 
         function handleRemoveImageBtnsEvents() {
