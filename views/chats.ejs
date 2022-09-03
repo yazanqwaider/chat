@@ -24,13 +24,14 @@
                 </button>
             <% } %>
         </div>
-    
+        
         <div class="flex flex-col justify-between w-4/5">
             <%- include('./messages.ejs') %>
         </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
+
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
 
@@ -101,13 +102,46 @@
                     setTimeout(() => {
                         messagesLayout.scrollTop = messagesLayout.scrollHeight;
                     }, 100);
+
+                    document.querySelector('.message-form-layout').style.display = 'block';
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         }
     
+        function createMessageItem(message) {
+            const side_class = (message.user_sender == user._id)? 'message_owner' : 'message_receiver';
+            var ASSET_URL= '<%= process.env.ASSET_URL %>';
+            let item = `<div class="message-item ${side_class}">`;
 
+            if(message.type == 'image') {
+                let images = "<div class='flex'>";
+                message.images.forEach((img) => {
+                    images+= `
+                        <img src="${ASSET_URL + img}" class="w-36" alt="message image">
+                    `;
+                });
+                images+= "</div>";
+                item+= `${images}`;
+            }
+            else if(message.type == 'audio') {
+                item+= `
+                    <audio controls>
+                        <source src="${ASSET_URL + message.audio_path}" type="audio/mp3">
+                        Your browser does not support the audio tag.
+                    </audio>
+                `;
+            }
+            else if(message.type == 'text') {
+                item+= `${message.text}`;
+            }
+                
+            item+= '</div>';
+            return item;
+        }
+    
+            
         const imageFilesInput = document.getElementById('image_file');
 
         let images = defineImages();
@@ -168,11 +202,11 @@
             e.preventDefault();
 
             let form = document.getElementById('message-form');
-            let messageText = document.querySelector('#message-form #message');
 
             if(active_chat_friend) {
                 let formData = new FormData();
-                let type = null;
+                let type = null, hasContent = false;
+                let messageText = document.querySelector('#message-form #message');
                 const temp_audio_as_base64 = sessionStorage.getItem('temp_audio_as_base64');
 
                 if(temp_audio_as_base64) {
@@ -185,7 +219,7 @@
                         formData.append('images', img);
                     });
                 }
-                else if(messageText) {
+                else if(messageText.value) {
                     type = "text";
                     formData.append('content_text', messageText.value);
                 }
@@ -238,38 +272,6 @@
                 }
             }
         });
-
-
-        function createMessageItem(message) {
-            const side_class = (message.user_sender == user._id)? 'message_owner' : 'message_receiver';
-            var ASSET_URL= '<%= process.env.ASSET_URL %>';
-            let item = `<div class="message-item ${side_class}">`;
-
-            if(message.type == 'image') {
-                let images = "<div class='flex'>";
-                message.images.forEach((img) => {
-                    images+= `
-                        <img src="${ASSET_URL + img}" class="w-36" alt="message image">
-                    `;
-                });
-                images+= "</div>";
-                item+= `${images}`;
-            }
-            else if(message.type == 'audio') {
-                item+= `
-                    <audio controls>
-                        <source src="${ASSET_URL + message.audio_path}" type="audio/mp3">
-                        Your browser does not support the audio tag.
-                    </audio>
-                `;
-            }
-            else if(message.type == 'text') {
-                item+= `${message.text}`;
-            }
-            
-            item+= '</div>';
-            return item;
-        }
 
         function handleRemoveImageBtnsEvents() {
             const remove_img_btns = document.querySelectorAll('.remove-img-btn');
@@ -397,7 +399,7 @@
 
         function showAudioBtns(keys) {
             keys.map((key) => document.getElementById(`${key}-audio-btn`).style.display = "block");
-        } 
+        }
     </script>
 </body>
 </html>
