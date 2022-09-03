@@ -60,7 +60,6 @@
                     if(answer) {
                         const user_id = this.getAttribute('data-userId');
                         let response = await toggleFriendConnection("request", user_id);
-                        console.log(response);
                         let user = JSON.parse(localStorage.getItem('user'));
                         user.friends = response;
                         localStorage.setItem('user', JSON.stringify(user));
@@ -75,7 +74,6 @@
                     if(answer) {
                         const user_id = this.getAttribute('data-userId');
                         let response = await toggleFriendConnection("remove", user_id);
-                        console.log(response);
                         let user = JSON.parse(localStorage.getItem('user'));
                         user.friends = response;
                         localStorage.setItem('user', JSON.stringify(user));
@@ -88,7 +86,6 @@
                 accpetFriendBtn.addEventListener('click', async function() {
                     const user_id = this.getAttribute('data-userId');
                     let response = await responseFriendRequest("accept", user_id);
-                    console.log(response);
                     accpetFriendBtn.parentElement.remove();
                     let user = JSON.parse(localStorage.getItem('user'));
                     user.friends = response;
@@ -103,7 +100,6 @@
                     if(answer) {
                         const user_id = this.getAttribute('data-userId');
                         let response = await responseFriendRequest("decline", user_id);
-                        console.log(response);
                         declineFriendBtn.parentElement.remove();
                         let user = JSON.parse(localStorage.getItem('user'));
                         user.friendship_requests = response;

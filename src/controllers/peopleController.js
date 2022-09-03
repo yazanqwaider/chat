@@ -45,10 +45,10 @@ module.exports.api_response_friendship_post = async function(req, res) {
     let authUserId = jwt.decode(req.cookies.token);
 
     if(req.params.required_action == 'accept') {
-        user.friends = await people.acceptFriendship(authUserId, req.params.id);
+        await people.acceptFriendship(authUserId, req.params.id);
     }
     else if(req.params.required_action == 'decline'){
-        user.friendship_requests = await people.declineFriendship(authUserId, req.params.id);
+        await people.declineFriendship(authUserId, req.params.id);
     }
     res.json(response);
 }

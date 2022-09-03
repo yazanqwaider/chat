@@ -43,7 +43,7 @@
 
         socket.on('messageReceived', function(messageObject) {
             messageObject = JSON.parse(messageObject);
-            let message = createMessageItem({text: messageObject.messageText, user_sender: active_chat_friend.user_id});
+            let message = createMessageItem(messageObject.messageInfo);
             
             if(document.querySelector('.no-messages-yet')) {
                 document.querySelector('.no-messages-yet').remove();
@@ -245,7 +245,9 @@
                             document.querySelector('.messages-layout').innerHTML+= message;
                             document.querySelector('#message-form #message').value = "";
                             if(type == 'image') {
-                                images.splice(0, images.length);
+                                try {
+                                    images.splice(0, images.length);
+                                } catch (error) {}
                             }
                             else if(type == 'audio'){
                                 sessionStorage.removeItem('temp_audio_as_base64');
@@ -263,7 +265,7 @@
                             let msgObject = {
                                 sender_id: sender_id,
                                 receiver_id: active_chat_friend.user_id,
-                                messageText: response.message.text
+                                messageInfo: response.message
                             };
 
                             socket.emit("messageSended", msgObject);
