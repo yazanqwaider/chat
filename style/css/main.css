@@ -12,6 +12,14 @@
     overflow: hidden;
 }
 
+@media (max-width: 768px) {
+    .collapse-header-menu {
+        @apply p-0;
+        transform: scaleY(0) translateY(-600px) rotateZ(90deg);
+    }
+}
+
+
 .form-input {
     @apply block w-full p-1.5 rounded-md border border-gray-300 outline-0 focus:border-green-400;
 }
