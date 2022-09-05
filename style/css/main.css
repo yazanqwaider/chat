@@ -25,11 +25,11 @@
 }
 
 .person-item {
-    @apply flex justify-between w-4/5 border border-gray-50 p-4 my-1.5 mx-auto rounded-md bg-white;
+    @apply flex justify-between w-11/12 md:w-4/5 border border-gray-50 p-3 md:p-4 my-1.5 mx-auto rounded-xl md:rounded-md bg-white;
 }
 
 .people-menu-item {
-    @apply w-11/12 p-2 bg-white bg-opacity-10 text-white rounded-full mx-auto my-1.5 transition hover:text-green-300 border border-transparent hover:border-gray-500;
+    @apply w-11/12 p-1 md:p-2 text-sm md:text-base bg-white bg-opacity-10 text-white rounded-full mx-auto my-1.5 transition hover:text-green-300 border border-transparent hover:border-gray-500;
 }
 
 .people-menu-item.active {

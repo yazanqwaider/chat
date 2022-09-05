@@ -12,14 +12,14 @@
 <body>
     <%- include('layouts/header.ejs'); %>
 
-    <div class="flex">
-        <div class="w-1/5 h-screen flex flex-col bg-black py-2">
+    <div class="flex flex-col md:flex-row">
+        <div class="w-full md:w-1/5 md:h-screen flex flex-row md:flex-col bg-black py-2">
             <button id="explore_btn" class="people-menu-item active">Explore</button>
             <button id="friends_btn" class="people-menu-item">Friends</button>
             <button id="requests_btn" class="people-menu-item">Requests</button>
         </div>
 
-        <div class="w-4/5 p-4 bg-black bg-opacity-5">
+        <div class="w-full md:w-4/5 p-4 bg-black bg-opacity-5">
             <div class="people-layout">
                 <% for(let i = 0; i < unfriendPeople.length; i++) { %>
                     <div class="person-item">
