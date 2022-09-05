@@ -12,9 +12,16 @@
 <body class="h-full">
     <%- include('layouts/header.ejs'); %>
 
-    <div class="flex content-container">
-        <div class="people-layout w-1/5 flex flex-col bg-black py-2">
-            <h4 class="text-white text-xl text-center my-1.5">Friends</h4>
+    <div class="flex content-container relative">
+        <div class="people-layout flex flex-col bg-black py-2 absolute md:relative left-0 top-0 z-10 w-[55%] sm:w-[40%] md:w-1/5 h-screen" style="transition: 0.5s;">
+            <div class="relative">
+                <h4 class="text-white text-xl text-center my-1.5">Friends</h4>
+
+                <button class="toggle-chats-menu-btn block md:hidden absolute top-0 -right-5 w-5 p-0.5 rounded-r-md bg-black">
+                    <i class="fa-solid fa-angles-left text-white"></i>
+                </button>
+            </div>
+
             <hr class="mb-3 bg-gray-600 border-0 h-0.5">
 
             <% for(let i = 0; i < friends.length; i++) { %>
@@ -25,12 +32,13 @@
             <% } %>
         </div>
         
-        <div class="flex flex-col justify-between w-4/5">
+        <div class="flex flex-col justify-between w-full md:w-4/5">
             <%- include('./messages.ejs') %>
         </div>
     </div>
 
     <script src="/js/master.js"></script>
+    <script src="/js/chats.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
