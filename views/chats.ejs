@@ -136,7 +136,7 @@
             }
             else if(message.type == 'audio') {
                 item+= `
-                    <audio controls>
+                    <audio class="w-full" controls>
                         <source src="${ASSET_URL + message.audio_path}" type="audio/mp3">
                         Your browser does not support the audio tag.
                     </audio>
@@ -164,8 +164,8 @@
                     target.forEach((img, index) => {
                         preview_images+= `
                             <div class="relative">
-                                <button class="remove-img-btn bg-red-500  w-5 rounded-md text-sm text-white absolute top-0.5 right-1.5" data-imgIndex="${index}">x</button>
-                                <img src="${URL.createObjectURL(img)}" class="w-24 mx-2 rounded">
+                                <button class="remove-img-btn bg-red-500 w-5 rounded-md text-sm text-white absolute top-0.5 right-1.5" data-imgIndex="${index}">x</button>
+                                <img src="${URL.createObjectURL(img)}" class="w-16 md:w-24 mx-2 rounded">
                             </div>
                         `;
                     });

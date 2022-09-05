@@ -19,7 +19,6 @@
     }
 }
 
-
 .form-input {
     @apply block w-full p-1.5 rounded-md border border-gray-300 outline-0 focus:border-green-400;
 }
@@ -49,6 +48,10 @@
 
 .chat-item.active {
     @apply text-green-500 border border-green-500;
+}
+
+.audio-operation-btn {
+    @apply p-1 md:p-2 mx-1 md:mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all;
 }
 
 #send-message-btn {

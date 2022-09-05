@@ -16,23 +16,23 @@
         <!-- Audio content input -->
         <div class="audio-form">
             <div class="audio-operations flex">
-                <button id="record-audio-btn" type="button" class="p-2 mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all" title="Record audio">
+                <button id="record-audio-btn" type="button" class="audio-operation-btn" title="Record audio">
                     <i class="fa-solid fa-microphone"></i>
                 </button>
 
-                <button id="resume-audio-btn" type="button" class="p-2 mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all hidden" title="Resume audio">
+                <button id="resume-audio-btn" type="button" class="audio-operation-btn hidden" title="Resume audio">
                     <i class="fa-solid fa-microphone"></i>
                 </button>
     
-                <button id="pause-audio-btn" type="button" class="p-2 mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all hidden" title="Pause audio">
+                <button id="pause-audio-btn" type="button" class="audio-operation-btn hidden" title="Pause audio">
                     <i class="fa-solid fa-pause"></i>
                 </button>
     
-                <button id="stop-audio-btn" type="button" class="p-2 mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all hidden" title="Stop audio">
+                <button id="stop-audio-btn" type="button" class="audio-operation-btn hidden" title="Stop audio">
                     <i class="fa-solid fa-stop"></i>
                 </button>
     
-                <button id="delete-audio-btn" type="button" class="p-2 mx-1.5 text-lg hover:cursor-pointer hover:scale-125 transition-all hidden" title="Delete audio">
+                <button id="delete-audio-btn" type="button" class="audio-operation-btn hidden" title="Delete audio">
                     <i class="fa-solid fa-trash-can"></i>
                 </button>
             </div>
@@ -40,7 +40,7 @@
 
         <!-- Images content input -->
         <div class="image-form">
-            <label for="image_file" class="p-2 mx-1.5 text-lg inline-block hover:cursor-pointer hover:scale-125 transition-all" title="Images">
+            <label for="image_file" class="p-1 md:p-2 mx-1 md:mx-1.5 text-lg inline-block hover:cursor-pointer hover:scale-125 transition-all" title="Images">
                 <i class="fas fa-image"></i>
             </label>
             <input type="file" id="image_file" multiple accept="image/*" class="hidden">
@@ -51,8 +51,9 @@
                 placeholder="Type message here" autocomplete="off" required>
         
 
-        <button type="button" id="send-message-btn" class="text-white rounded-md px-5 py-1.5 mx-1.5 hover:bg-black hover:scale-x-105 transition">
-            send <i class="fa-solid fa-paper-plane"></i>
+        <button type="button" id="send-message-btn" class="text-white rounded-md px-3 md:px-5 py-1.5 mx-1.5 hover:bg-black hover:scale-x-105 whitespace-nowrap transition">
+            <span>send</span>
+            <i class="fa-solid fa-paper-plane"></i>
         </button>
     </form>
 </div>
