@@ -6,7 +6,8 @@
   "scripts": {
     "serve": "nodemon server.js",
     "dev": "postcss style/css/main.css -o public/dist/main.css",
-    "watch": "postcss style/css/main.css -o public/dist/main.css --watch"
+    "watch": "postcss style/css/main.css -o public/dist/main.css --watch",
+    "key:generate": "node copy-env-script.js"
   },
   "keywords": [],
   "author": "",
