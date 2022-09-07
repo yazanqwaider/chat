@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "nodemon server.js",
     "dev": "postcss style/css/main.css -o public/dist/main.css",
-    "dev-watch": "postcss style/css/main.css -o public/dist/main.css --watch"
+    "watch": "postcss style/css/main.css -o public/dist/main.css --watch"
   },
   "keywords": [],
   "author": "",
