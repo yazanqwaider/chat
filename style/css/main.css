@@ -17,6 +17,10 @@
         @apply p-0;
         transform: scaleY(0) translateY(-600px) rotateZ(90deg);
     }
+
+    .people-layout {
+        height: calc(100vh - 186px);
+    }
 }
 
 .form-input {

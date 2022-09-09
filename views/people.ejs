@@ -21,13 +21,17 @@
 
         <div class="w-full md:w-4/5 p-4 bg-black bg-opacity-5">
             <div class="people-layout">
-                <% for(let i = 0; i < unfriendPeople.length; i++) { %>
-                    <div class="person-item">
-                        <span class="person-name"><%= unfriendPeople[i].username %></span>
-                        <div>
-                            <button class="people-operation-btn request-friend-btn bg-green-400" data-userId="<%= unfriendPeople[i]._id %>">request</button>
+                <% if(unfriendPeople.length > 0) { %>
+                    <% for(let i = 0; i < unfriendPeople.length; i++) { %>
+                        <div class="person-item">
+                            <span class="person-name"><%= unfriendPeople[i].username %></span>
+                            <div>
+                                <button class="people-operation-btn request-friend-btn bg-green-400" data-userId="<%= unfriendPeople[i]._id %>">request</button>
+                            </div>
                         </div>
-                    </div>
+                    <% } %>
+                <% } else { %>
+                    <p class='text-center'>No results ...</p>
                 <% } %>
             </div>
         </div>
@@ -119,30 +123,37 @@
             .then((response) => {
                 const list = response.list;
                 let htmlItems = "";
-                list.forEach((person) => {
-                    htmlItems+= `<div class="person-item">`;               
-                    htmlItems+= `<span class="person-name">${person.username}</span>`;               
-                    htmlItems+= `<div>`;               
 
-                    if(type == 'friends') {
-                        htmlItems+= `
-                            <button class="people-operation-btn remove-friend-btn bg-red-400" data-userId="${person._id}">remove</button>
-                        `;
-                    }
-                    else if(type == 'explore') {
-                        htmlItems+= `
-                            <button class="people-operation-btn request-friend-btn bg-green-400" data-userId="${person._id}">request</button>
-                        `;
-                    }
-                    else if(type == 'requested') {
-                        htmlItems+= `
-                            <button class="people-operation-btn accept-friend-btn bg-green-400" data-userId="${person._id}">accept</button>
-                            <button class="people-operation-btn decline-friend-btn bg-red-400" data-userId="${person._id}">decline</button>
-                        `;
-                    }
-                    htmlItems+= `</div>`;
-                    htmlItems+= `</div>`;
-                });
+                if(list.length > 0) {
+                    list.forEach((person) => {
+                        htmlItems+= `<div class="person-item">`;               
+                        htmlItems+= `<span class="person-name">${person.username}</span>`;               
+                        htmlItems+= `<div>`;               
+
+                        if(type == 'friends') {
+                            htmlItems+= `
+                                <button class="people-operation-btn remove-friend-btn bg-red-400" data-userId="${person._id}">remove</button>
+                            `;
+                        }
+                        else if(type == 'explore') {
+                            htmlItems+= `
+                                <button class="people-operation-btn request-friend-btn bg-green-400" data-userId="${person._id}">request</button>
+                            `;
+                        }
+                        else if(type == 'requested') {
+                            htmlItems+= `
+                                <button class="people-operation-btn accept-friend-btn bg-green-400" data-userId="${person._id}">accept</button>
+                                <button class="people-operation-btn decline-friend-btn bg-red-400" data-userId="${person._id}">decline</button>
+                            `;
+                        }
+                        htmlItems+= `</div>`;
+                        htmlItems+= `</div>`;
+                    });
+                }
+                else {
+                    htmlItems = "<p class='text-center'>No results ...</p>";
+                }
+               
                 document.querySelector('.people-layout').innerHTML = htmlItems;
                 handleFriendOperations();
             });
