@@ -81,8 +81,7 @@
                 let userId = this.getAttribute('data-userId');
                 getMessages(userId);
 
-                if(active_chat_friend)
-                    document.querySelector('.chat-item .active').classList.remove('active');
+                document.querySelector('.chat-item.active')?.classList.remove('active');
                 this.classList.add('active');
             });
         });
