@@ -24,11 +24,15 @@
 
             <hr class="mb-3 bg-gray-600 border-0 h-0.5">
 
-            <% for(let i = 0; i < friends.length; i++) { %>
-                <button class="chat-item" data-userId="<%= friends[i]._id %>">
-                    <i class="fa-solid fa-user-large"></i> 
-                    <%= friends[i].username %>
-                </button>
+            <% if(friends.length > 0) { %>
+                <% for(let i = 0; i < friends.length; i++) { %>
+                    <button class="chat-item" data-userId="<%= friends[i]._id %>">
+                        <i class="fa-solid fa-user-large"></i> 
+                        <%= friends[i].username %>
+                    </button>
+                <% } %>
+            <% } else { %>
+                <p class="text-center text-gray-200">No friends yet !</p>
             <% } %>
         </div>
         
@@ -76,7 +80,9 @@
             chatItem.addEventListener('click', function() {
                 let userId = this.getAttribute('data-userId');
                 getMessages(userId);
-                document.querySelector('.chat-item .active')?.classList.remove('active');
+
+                if(active_chat_friend)
+                    document.querySelector('.chat-item .active').classList.remove('active');
                 this.classList.add('active');
             });
         });
