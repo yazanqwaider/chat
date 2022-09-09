@@ -9,7 +9,7 @@
 </head>
 
 <body class="bg-stone-50">
-    <div class="w-11/12 md:w-1/2 mx-auto mt-32 flex flex-col items-center bg-white bg-opacity-70 border border-stone-100 shadow-slate-100 shadow-lg rounded-xl p-3 md:p-6">
+    <div class="w-11/12 md:w-1/2 mx-auto my-24 md:mt-32 flex flex-col items-center bg-white bg-opacity-70 border border-stone-100 shadow-slate-100 shadow-lg rounded-xl p-3 md:p-6">
         <h4 class="text-center text-2xl">Signup</h4>
     
         <form method="post" id="signupForm" class="w-full md:w-10/12 lg:w-3/4 p-3 my-2">
@@ -29,10 +29,13 @@
             </div>
     
             <div class="mt-6 text-center">
-                <button class="px-6 py-1.5 rounded-md bg-green-400 transition hover:bg-green-500 shadow-sm shadow-slate-400">Signup</button>
+                <button class="px-6 py-1.5 rounded-md bg-green-400 transition hover:bg-green-500 shadow-sm shadow-slate-400">
+                    Signup 
+                    <img src="/images/loader.gif" alt="loader" class="w-7 hidden loading-icon">
+                </button>
             </div>
 
-            <div>
+            <div class="mt-2">
                 <a href="/login" class="mx-2 text-gray-600">Login</a>
             </div>
         </form>
@@ -53,6 +56,9 @@
             }
 
             let form = {username, password};
+
+            showLoadingIcon();
+
             fetch('/signup', {
                 method: 'POST', 
                 headers: {
@@ -69,10 +75,25 @@
                 else {
                     alert(data.message);
                 }
+
+                hideLoadingIcon();
             })
             .catch((err) => {
                 console.log(err);
+                hideLoadingIcon();
             });
+        }
+
+        function showLoadingIcon() {
+            const loadingIcon = document.querySelector('.loading-icon');
+            loadingIcon.classList.replace('hidden', 'inline');
+            loadingIcon.setAttribute('disabled', true);
+        }
+
+        function hideLoadingIcon() {
+            const loadingIcon = document.querySelector('.loading-icon');
+            loadingIcon.classList.replace('inline', 'hidden');
+            loadingIcon.removeAttribute('disabled');
         }
     </script>
 </body>
