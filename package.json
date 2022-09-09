@@ -8,7 +8,8 @@
     "dev": "postcss style/css/main.css -o public/dist/main.css",
     "watch": "postcss style/css/main.css -o public/dist/main.css --watch",
     "build": "postcss style/css/main.css -o public/dist/main.css build",
-    "key:generate": "node copy-env-script.js"
+    "key:generate": "node copy-env-script.js",
+    "initialize": "node initialize.js"
   },
   "keywords": [],
   "author": "",
