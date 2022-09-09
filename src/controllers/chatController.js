@@ -68,7 +68,9 @@ module.exports.api_post_messages = async function(req, res) {
     let ObjectId = require('mongodb').ObjectId;
     let authUserId = jwt.decode(req.cookies.token);
     
+    let images = [];
     let audio_record_path = null;
+
     if(req.body.type == 'audio') {
         const fs = require("fs")
         const uniqueSuffix = req.params.chat_id + '-' +  Date.now();
@@ -84,10 +86,30 @@ module.exports.api_post_messages = async function(req, res) {
         });
     }
 
-    let images = [];
-    req.files.forEach((file) => {
-        images.push(file.path.split('public\\')[1]);
-    });
+    else if(req.body.type == 'image') {
+        if (!req.files || Object.keys(req.files).length === 0) {
+            res.json({status: false, statusMessage: 'No files were uploaded.'});
+            return;
+        }
+        
+        let imagesFiles = req.files.images;
+        imagesFiles = Array.isArray(imagesFiles)? imagesFiles : [imagesFiles];
+
+        let imgIndex = 1;
+        imagesFiles.forEach((imageFile) => {
+            const uniqueSuffix = req.params.chat_id + '-' +  Date.now() + '-' + (imgIndex++);
+            const extension = imageFile.mimetype.split('/')[1];
+            const imagePath = 'messages/images/' + uniqueSuffix + '.' + extension;           
+        
+            imageFile.mv(`public/${imagePath}`, function(err) {
+                if (err) {
+                    return res.json({status: false, statusMessage: 'Error has happend !'});
+                }
+
+                images.push(imagePath);
+            });
+        });
+    }
 
     let newMessage = {
         user_sender: new ObjectId(authUserId),

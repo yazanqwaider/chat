@@ -3,7 +3,6 @@ const http = require('http');
 const path = require('path');
 const { Server } = require("socket.io");
 const cookieParser = require('cookie-parser');
-var multer = require('multer');
 require('dotenv').config();
 
 const port = process.env.PORT || 8000;
