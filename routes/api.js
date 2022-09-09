@@ -20,7 +20,7 @@ router.get('/api/chats/:user_id', chatController.api_get_messages);
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'public/messages/images')
+      cb(null, '/public/messages/images')
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = req.params.chat_id + '-' +  Date.now();
