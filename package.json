@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "serve": "nodemon server.js",
-    "dev": "postcss style/css/main.css -o public/dist/main.css",
-    "watch": "postcss style/css/main.css -o public/dist/main.css --watch",
-    "build": "postcss style/css/main.css -o public/dist/main.css build",
+    "dev": "npx @tailwindcss/cli -i ./style/css/main.css -o ./public/dist/main.css --dev",
+    "watch": "npx @tailwindcss/cli -i ./style/css/main.css -o ./public/dist/main.css --watch",
+    "build": "npx @tailwindcss/cli -i ./style/css/main.css -o ./public/dist/main.css --build",
     "key:generate": "node copy-env-script.js",
     "initialize": "node initialize.js"
   },
@@ -15,6 +15,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "@tailwindcss/postcss": "^4.1.18",
     "autoprefixer": "^10.4.23",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
@@ -27,7 +29,9 @@
     "mongodb": "^7.0.0",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
-    "socket.io": "^4.8.3",
+    "socket.io": "^4.8.3"
+  },
+  "devDependencies": {
     "tailwindcss": "^4.1.18"
   }
 }
