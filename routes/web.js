@@ -7,8 +7,6 @@ const peopleController = require('../src/controllers/peopleController');
 const authMiddleware = require('../src/middleware/authMiddleware');
 
 
-router.get('/:username', authMiddleware.getUserObject);
-
 router.get('/', (req, res) => {
     res.render('welcome');
 });

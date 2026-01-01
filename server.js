@@ -4,6 +4,7 @@ const path = require('path');
 const { Server } = require("socket.io");
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
+const authMiddleware = require('./src/middleware/authMiddleware');
 
 const port = process.env.PORT || 8000;
 const app = express();
@@ -14,7 +15,7 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(express.json());
 app.use(cookieParser());
-
+app.use(authMiddleware.getUserObject);
 
 /** Routes */
 const webRoutes = require('./routes/web');
